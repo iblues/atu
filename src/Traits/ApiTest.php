@@ -9,16 +9,6 @@ use Larfree\Libs\Swagger;
 
 trait ApiTest
 {
-    function doTest()
-    {
-        $response = $this->json('GET', '/api/admin/admin/nav');
-        $response
-            ->assertStatus(200)
-            ->assertJson([
-                'code' => true,
-            ]);
-    }
-
 
     function doNow()
     {
@@ -28,6 +18,13 @@ trait ApiTest
         }
     }
 
+    function doAll()
+    {
+        $todoList = Annotation::getApiTest();
+        foreach ($todoList as $todo) {
+            $return = new ApiTestFactory($this, $todo);
+        }
+    }
 }
 
 

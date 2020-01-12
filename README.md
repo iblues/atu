@@ -59,11 +59,20 @@ use Tests\TestCase;
  * 测试标记了@test|now的模块
  * @package Tests\Feature
  */
-class ApiTestNow extends TestCase
+class AnnotationTest extends TestCase
 {
     use ApiTest;
+    /**
+     * 测试标记了@test|now的模块
+     */
     public function testNow(){
        $this->doNow();
+    }
+    /**
+     * 测试所有@Test/Api模块
+     */
+    public function testAll(){
+       $this->doAll();
     }
 
 }
