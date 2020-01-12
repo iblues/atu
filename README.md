@@ -36,7 +36,7 @@
 
    /**
      * @Test\Api(
-     *     'path':1, 
+     *     path:1, 
      *     @Test\Now(),
      *     @Test\Request(),
      *     @Test\Response(200,{
