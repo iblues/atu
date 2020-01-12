@@ -10,9 +10,65 @@
 
 ## Installing
 
+1.composer 安装
 ```shell
-$ composer require iblues/annotation-test-unit -vvv
+1.$ composer require iblues/annotation-test-unit -vvv
 ```
+2.配置好单元测试( 相关教程请百度)
+
+3.找一个控制器.增加注解. 
+```
+    /**
+     * @Test\Api(
+     *     @Test\Now(),
+     *     @Test\Request(),
+     *     @Test\Response(200,{
+     *      "code":true,
+     *      "data":{{"id":true,"user":true}}
+     *     }),
+     * )
+     */
+    public function index(Request $request)
+    ....
+
+
+   /**
+     * @Test\Api(
+     *     'path':1, 
+     *     @Test\Now(),
+     *     @Test\Request(),
+     *     @Test\Response(200,{
+     *      "code":true,
+     *      "data":{{"id":true,"user":true}}
+     *     }),
+     * )
+     */
+    public function index($id,Request $request)
+    ....
+```
+4.创建单元测试文件,运行即可.
+```
+namespace Tests\Feature;
+
+use Iblues\AnnotationTestUnit\Traits\ApiTest;
+use Tests\TestCase;
+
+/**
+ * 测试标记了@test|now的模块
+ * @package Tests\Feature
+ */
+class ApiTestNow extends TestCase
+{
+    use ApiTest;
+    public function testNow(){
+       $this->doNow();
+    }
+
+}
+```
+
+    
+
 
 ## Usage
 
