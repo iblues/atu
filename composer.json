@@ -1,7 +1,10 @@
 {
+    "name": "iblues/annotation-test-unit",
     "autoload": {
         "psr-4": {
             "Iblues\\AnnotationTestUnit\\": "src"
         }
+    },
+    "require": {
     }
 }
