@@ -82,7 +82,7 @@ class AnnotationTest extends TestCase
 ```
 
     
-##如何更爽快的编写?
+## 如何更爽快的coding?
 1.安装phpstorm插件.
 
  https://plugins.jetbrains.com/plugin/index?xmlId=de.espend.idea.php.annotation
