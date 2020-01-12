@@ -53,4 +53,22 @@ class Api
         }
 //        dump($data);
     }
+
+    /**
+     *
+     * @param $testClass 测试类
+     * @author Blues
+     *
+     */
+    public function handleRequest($testClass, $method = 'GET', $url)
+    {
+        //处理method,url  put:11.com
+        $response = $this->request->handel($testClass, $method, $url);
+        $this->response->setRespone($response);
+    }
+
+    public function handleResponse($testClass, $annotation)
+    {
+        $this->response->assert($annotation);
+    }
 }

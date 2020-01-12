@@ -6,6 +6,7 @@ namespace Iblues\AnnotationTestUnit\Libs;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use ReflectionClass;
 use ReflectionMethod;
 
 class Annotation
@@ -55,6 +56,11 @@ class Annotation
 
                     $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
 
+
+                    $route['class'] = $class;
+                    $route['classPath'] = (new ReflectionClass($class))->getFileName();
+                    $route['method'] = $method;
+                    $route['methodStartLine'] = $reflectionMethod->getStartLine();//函数开始的行数
                     $route['annotation'] = $methodAnnotations;
                     $return[] = $route;
 

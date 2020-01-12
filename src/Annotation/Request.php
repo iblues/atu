@@ -16,4 +16,9 @@ class Request
     public function __construct($data = [])
     {
     }
+
+    public function handel($testClass, $method, $url)
+    {
+        return $testClass->json($method, $url);
+    }
 }
