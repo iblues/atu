@@ -162,11 +162,13 @@ class ApiTestNow extends TestCase
 
 ## TodoList
 - [ ] testApi
-- [ ] testNow
-- [ ] testParam
-- [ ] testResponse
+- [x] testNow
+- [x] testParam
+- [ ] testParam 文件上传支持
+- [x] testResponse
+- [ ] testResponse,正则和高级规则支持
 - [ ] testBefore
-- [ ] testResponse
+- [x] testResponse
 - [ ] testTransaction
 - [ ] testDebug
 - [ ] testName , testBefore
