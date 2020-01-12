@@ -19,6 +19,9 @@
 3.找一个控制器.增加注解.
 
 ```
+    //请确保use以下
+    use Iblues\AnnotationTestUnit\Annotation as Test;
+
     //请确认有匹配的路由, 程序是根据路由的映射表进行查找. 如果路由映射错误, 会无法执行. 后期会处理这种问题
     /**
      * @Test\Api(
@@ -79,7 +82,19 @@ class AnnotationTest extends TestCase
 ```
 
     
+##如何更爽快的编写?
+1.安装phpstorm插件.
 
+ https://plugins.jetbrains.com/plugin/index?xmlId=de.espend.idea.php.annotation
+ 
+ 2.设置插件
+ use Alisa:
+ Iblues\AnnotationTestUnit\Annotation  as  Test
+ 
+ 
+ 怎么爽快?
+ 1.有完整的代码提示.
+ 2.可以快速跳转.
 
 ## Usage
 
