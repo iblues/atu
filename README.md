@@ -149,14 +149,14 @@ class ApiTestNow extends TestCase
 
 4.结合larfree
 ```
-@testApi //完了. 所有参数自动构建.
+@Test\Api //完了. 所有参数自动构建.
 ```
 
 
 
-## 其他  函数的常规测试 待续
+## 其他  函数的常规测试 未完成的 待续
 ```
-@testNow
+@TestNow
 @assert(1,2) == 3
 ```
 

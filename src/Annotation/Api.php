@@ -26,11 +26,20 @@ class Api
     public $request;
     public $debug;
     public $now = 0;
+    public $urlPath = null;
+    protected $httpMethod = null;
 
 
     public function __construct($data)
     {
+        if (isset($data['path'])) {
+            $this->urlPath = $data['path'];
+        }
+        if (isset($data['method'])) {
+            $this->httpMethod = $data['method'];
+        }
         foreach ($data['value'] as $param) {
+
             if ($param instanceof Now) {
                 $this->debug = new Debug();
                 $this->now = 1;
@@ -41,6 +50,7 @@ class Api
             } elseif ($param instanceof Debug) {
                 $this->debug = $param;
             }
+
 
             //如果没有 先赋个默认值
             if (!$this->request) {
@@ -63,6 +73,23 @@ class Api
     public function handleRequest($testClass, $method = 'GET', $url)
     {
         //处理method,url  put:11.com
+        $method = $this->httpMethod ?? $method;
+
+
+        if ($this->urlPath) {
+            //第一个是/ 就直接用
+            if ($this->urlPath[0] == '/') {
+                $url = $this->urlPath;
+                //如果是http开头也直接用
+            } elseif (substr($this->urlPath, 0, 4) == 'http') {
+                $url = $this->urlPath;
+            } else {
+                //如果都不是.那就是单独的path参数. 拼接在后面
+                $url = preg_replace('/{.*?}/i', '', $url);
+                $url = $url . $this->urlPath;
+            }
+        }
+
         $response = $this->request->handel($testClass, $method, $url);
         $this->response->setRespone($response);
     }
