@@ -112,7 +112,7 @@ class AnnotationTest extends TestCase
 
 @testNow //代表执行的测试要执行这个.避免全部执行很慢.
 
-@testDebug //返回的内容都打印出来
+//@testDebug //返回的内容都打印出来
 //@testTransaction true //事务默认就是开启.可以不设置
 
 @testApi (代表是api的测试)
