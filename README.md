@@ -61,27 +61,42 @@
 ```
 4.创建单元测试文件,运行即可. Tips: ctrl+r / 开启toggle auto test 即可重新运行测试,加快效率!
 ```
-namespace Tests\Feature;
+<?php
+namespace Tests\Api;
 
 use Iblues\AnnotationTestUnit\Traits\ApiTest;
-use Illuminate\Foundation\Testing\DatabaseTransactions;//开启事务,避免影响正常业务
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
- * 测试标记了@test|now的模块
- * @package Tests\Feature
+ * 注解测试
+ * @author Blues
  */
 class AnnotationTest extends TestCase
 {
+    //DatabaseTransactions自动开启事务. 这样不会写入数据库. 但是注意!事务外的应用读不起到数据库的写入值.
     use ApiTest,DatabaseTransactions;
+
+    public function setUp(): void
+    {
+        //阻止commit提交导致脏数据库. 配合DatabaseTransactions同时使用
+        $mock = \Mockery::mock('alias:\DB');
+        $mock->shouldReceive('commit')
+            ->withAnyArgs()
+            ->andReturn('true');
+
+        parent::setUp();
+    }
+
     /**
-     * 测试标记了@test|now的模块
+     * 测试带有@test\Api和@test\Now注解的
      */
     public function testNow(){
-       $this->doNow();
+        $this->doNow();
     }
+
     /**
-     * 测试所有@Test/Api模块
+     * 测试带有@test\Api()注解的
      */
     public function testAll(){
        $this->doAll();
