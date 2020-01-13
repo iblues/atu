@@ -89,9 +89,9 @@ class Api
                 $url = $url . $this->urlPath;
             }
         }
-
         $response = $this->request->handel($testClass, $method, $url);
         $this->response->setRespone($response);
+        return ['method' => $method, 'url' => $url, 'request' => $this->request->getJsonRequest()];
     }
 
     public function handleResponse($testClass, $annotation)

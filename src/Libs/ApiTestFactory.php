@@ -23,6 +23,7 @@ class ApiTestFactory
 
         $this->testClass = $testClass;
         $this->url = $param['url'];
+        $this->method = $param['httpMethod'];
         $this->fileLine = $methodLine = 'file://' . $param['classPath'] . ':' . $param['methodStartLine'];
 //        $response = $this->json('GET', '/api/admin/admin/nav');
 //        $response
@@ -44,8 +45,13 @@ class ApiTestFactory
             //如果是开启了当前测试. 提醒下哪些开了的 方便随时关闭
             dump('@Test\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
         }
-        $annotation->handleRequest($this->testClass, $this->method, $this->url);
-        $annotation->handleResponse($this->testClass, $annotation);
-
+        $request = $annotation->handleRequest($this->testClass, $this->method, $this->url);
+        try {
+            $annotation->handleResponse($this->testClass, $annotation);
+        } catch (\Exception $e) {
+            dump('Code in ' . $this->methodPath . '(' . $this->fileLine . ")");
+            dump($request);
+            throw $e;
+        }
     }
 }

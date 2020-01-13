@@ -169,11 +169,42 @@ class AnnotationTest extends TestCase
   @Test\Debug()
 )
 
+
+
+
+@Test\Api(
+  @Test\Now(),
+  @Test\Request({"title":122}),
+  @Test\Response({
+   "data":{"title":122}
+  }),
+  @Test\Debug()
+),
+
+
+@Test\Api(
+  @Test\Now(),
+  @Test\Request({"title":1}),
+  @Test\Response(422,{
+   "data":{"title":true}
+  }),
+  @Test\Debug()
+)
 ```
 
 4.结合larfree
 ```
 @Test\Api //完了. 所有参数自动构建.
+```
+
+5.定义模板
+```
+@Test\Template()
+```
+6.调用模板
+
+```
+$Test\Call('restFull');
 ```
 
 

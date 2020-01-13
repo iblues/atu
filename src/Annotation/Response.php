@@ -66,7 +66,7 @@ class Response
      */
     public function dumpResponse($response)
     {
-        $vl = json_encode($response, JSON_PRETTY_PRINT);
+        $vl = json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $array = json_decode($vl, 1);
         //如果层级太多了.大于16个. 就记录到日志中去
         if (count($array, 1) > 16) {

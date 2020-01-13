@@ -56,7 +56,7 @@ class Annotation
 
                     $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
 
-
+                    $route['httpMethod'] = $route['method'];
                     $route['class'] = $class;
                     $route['classPath'] = (new ReflectionClass($class))->getFileName();
                     $route['method'] = $method;

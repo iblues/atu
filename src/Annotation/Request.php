@@ -13,12 +13,24 @@ namespace Iblues\AnnotationTestUnit\Annotation;
  */
 class Request
 {
+    public $request = null;
+
     public function __construct($data = [])
     {
+        $this->request = $data['value'] ?? null;
+    }
+
+    public function getJsonRequest()
+    {
+        return $this->request;
     }
 
     public function handel($testClass, $method, $url)
     {
-        return $testClass->json($method, $url);
+        if (is_null($this->request)) {
+            return $testClass->json($method, $url);
+        } else {
+            return $testClass->json($method, $url, $this->request);
+        }
     }
 }
