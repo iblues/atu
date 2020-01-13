@@ -116,8 +116,8 @@ class AnnotationTest extends TestCase
 //@testTransaction true //事务默认就是开启.可以不设置
 
 @testApi (代表是api的测试)
-@testApi ( url = http://baidu.com , method=GET)
-@testApi ( url = /api/test/test/1 , method=POST)
+@testApi ( path = http://baidu.com , method=GET)
+@testApi ( path = /api/test/test/1 , method=POST)
 @testApi ( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
 
 @test\Request({1:21})   //json参数
