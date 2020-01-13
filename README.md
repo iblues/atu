@@ -1,6 +1,6 @@
 <h1 align="center"> annotation-test-unit </h1>
 
-<p align="center"> Base on annotation's and laravel phpunit.
+<p align="center">A PhpUnit Tool Base on annotation and laravel .
 一个基于注解和laravel单元测试的 自动化测试包
 
 </p>
