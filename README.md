@@ -59,7 +59,7 @@
     public function store($id,Request $request)
     ....
 ```
-4.创建单元测试文件,运行即可.
+4.创建单元测试文件,运行即可. Tips: ctrl+r 即可重新运行测试,加快效率!
 ```
 namespace Tests\Feature;
 
