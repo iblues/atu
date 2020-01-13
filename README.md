@@ -59,7 +59,7 @@
     public function store($id,Request $request)
     ....
 ```
-4.创建单元测试文件,运行即可. Tips: ctrl+r 即可重新运行测试,加快效率!
+4.创建单元测试文件,运行即可. Tips: ctrl+r / 开启toggle auto test 即可重新运行测试,加快效率!
 ```
 namespace Tests\Feature;
 
@@ -123,10 +123,9 @@ class AnnotationTest extends TestCase
 @testApi ( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
 
 @test\Request({1:21})   //json参数
-//@test\Request({file:@storage(12.txt)} ) //代表文件路径的
-@test\Request({2:1})//代表文件路径的
+//@test\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
 
-@testBefore(/test/test/TestBoot()); //优先调其他的
+//@testBefore(/test/test/TestBoot()); //优先调其他的, 未完成
 //@testBefore(@test('expressOrder')); //会将请求和返回的结果存下来 再议
 
 @test\Response( 200 )  //默认就是200
@@ -135,7 +134,7 @@ class AnnotationTest extends TestCase
   "data":{
     {"id":true}
    },
-   @Test\assertJson(...), //等等其他的 
+   //@Test\assertJson(...), //等等其他的断言 未完成. 
 }),
 ```
 ### DEMO
