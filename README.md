@@ -107,6 +107,14 @@ class AnnotationTest extends TestCase
 
     
 ## 如何更爽快的coding?
+### 怎么爽快?
+<p>
+ 1.有完整的代码提示.
+ 
+ 2.可以注解快速跳转.方便快速查看代码和文档
+</p>
+
+### 安装插件
 1.安装phpstorm插件.
 
  https://plugins.jetbrains.com/plugin/index?xmlId=de.espend.idea.php.annotation
@@ -116,9 +124,7 @@ class AnnotationTest extends TestCase
  Iblues\AnnotationTestUnit\Annotation  as  Test
  
  
- 怎么爽快?
- 1.有完整的代码提示.
- 2.可以快速跳转.
+
 
 ## Usage
 
