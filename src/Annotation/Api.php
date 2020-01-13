@@ -51,15 +51,14 @@ class Api
                 $this->debug = $param;
             }
 
+        }
 
-            //如果没有 先赋个默认值
-            if (!$this->request) {
-                $this->request = new Request();
-            }
-            if (!$this->response) {
-                $this->response = new Response();
-            }
-
+        //如果没有 先赋个默认值
+        if (!$this->request) {
+            $this->request = new Request();
+        }
+        if (!$this->response) {
+            $this->response = new Response();
         }
 //        dump($data);
     }

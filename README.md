@@ -4,7 +4,11 @@
 一个基于注解和laravel单元测试的 自动化测试包
 
 </p>
+
+### 这个扩展包有啥用? 
 <p>
+    1.改变你的开发方式. 改完代码,切换浏览器/postman 请求接口 烦不烦? 
+    2.顺带完成高覆盖测试.
 配个视频在这里!~
 </p>
 
@@ -26,29 +30,32 @@
     /**
      * @Test\Api(
      *     @Test\Now(),
-     *     @Test\Request(),
-     *     @Test\Response(200,{
-     *      "code":true,
-     *      "data":{{"id":true,"user":true}}
-     *     }),
      * )
      */
     public function index(Request $request)
     ....
 
+    /**
+     * 请确保 xx/xx/1有数据
+     * @Test\Api(
+     *     "path":1   
+     *      @Test\Now(),
+     * )
+     */
+    public function show(Request $request)
+    ....
 
    /**
      * @Test\Api(
      *     path:1, 
      *     @Test\Now(),
-     *     @Test\Request(),
-     *     @Test\Response(200,{
-     *      "code":true,
-     *      "data":{{"id":true,"user":true}}
-     *     }),
+     *     @Test\Request({"title":122}),
+     *     @Test\Response({
+     *      "data":{"id":true,"title":122}
+     *     })
      * )
      */
-    public function index($id,Request $request)
+    public function store($id,Request $request)
     ....
 ```
 4.创建单元测试文件,运行即可.
@@ -197,14 +204,13 @@ class AnnotationTest extends TestCase
 @Test\Api //完了. 所有参数自动构建.
 ```
 
-5.定义模板
+5.调用模板
 ```
-@Test\Template()
-```
-6.调用模板
+@Test\Api(
+    @Test\Larfree('tes.test')
+)
 
-```
-$Test\Call('restFull');
+//然后定义? 
 ```
 
 
@@ -214,6 +220,11 @@ $Test\Call('restFull');
 @TestNow
 @assert(1,2) == 3
 ```
+
+## FAQ
+Q: 报错 got '@' at position
+A: 注解错误,  经常是少了逗号.
+
 
 ## TodoList
 - [ ] testApi
