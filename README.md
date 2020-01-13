@@ -49,7 +49,6 @@
 
    /**
      * @Test\Api(
-     *     path:1, 
      *     @Test\Now(),
      *     @Test\Request({"title":122}),
      *     @Test\Response({
