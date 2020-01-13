@@ -1,4 +1,4 @@
-<h1 align="center"> annotation-test-unit </h1>
+<h1 align="center"> Annotation-test-unit </h1>
 
 <p align="center">A PhpUnit Tool Base on annotation and laravel .
 一个基于注解和laravel单元测试的 自动化测试包
@@ -65,6 +65,7 @@
 namespace Tests\Feature;
 
 use Iblues\AnnotationTestUnit\Traits\ApiTest;
+use Illuminate\Foundation\Testing\DatabaseTransactions;//开启事务,避免影响正常业务
 use Tests\TestCase;
 
 /**
@@ -73,7 +74,7 @@ use Tests\TestCase;
  */
 class AnnotationTest extends TestCase
 {
-    use ApiTest;
+    use ApiTest,DatabaseTransactions;
     /**
      * 测试标记了@test|now的模块
      */
