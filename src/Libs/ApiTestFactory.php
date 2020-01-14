@@ -50,7 +50,6 @@ class ApiTestFactory
             $response = $annotation->handleResponse($this->testClass, $annotation);
         } catch (\Exception $e) {
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
-            $num = 10;
             $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
             $this->dump('URL', $request['url']);
             $this->dump('Request', json_encode($request['request'], JSON_UNESCAPED_UNICODE));
@@ -65,14 +64,15 @@ class ApiTestFactory
 
     protected function dump($key, $val)
     {
-        $stirng = ' - ' . str_pad($key, 15, ' ', STR_PAD_RIGHT) . ":   $val";
         $strings = explode("\n", $val);
-        foreach ($strings as $key => $string) {
-            if ($key > 0) {
-                $strings[$key] = str_pad($key, 15, ' ', STR_PAD_RIGHT) . $string;
+        foreach ($strings as $k => $string) {
+            if ($k > 0) {
+                $strings[$k] = '                        ' . $string;
             }
         }
-        if ($key == 'ErrorMsg') {
+        $stirng = implode("\n", $strings);
+        $stirng = ' - ' . str_pad($key, 15, ' ', STR_PAD_RIGHT) . ":   {$stirng}";
+        if (in_array($key, ['ErrorMsg', 'Response'])) {
             Console::error($stirng);
         } else {
             Console::dump($stirng);

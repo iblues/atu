@@ -101,6 +101,8 @@ class Response
             }
 
         } else {
+            $vl = json_decode($vl);
+            $vl = json_encode($vl, JSON_UNESCAPED_UNICODE);
             $this->debugInfo['Response'] = $vl;
         }
     }
