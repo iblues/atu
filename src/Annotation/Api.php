@@ -2,8 +2,8 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
-use Iblues\AnnotationTestUnit\Annotation\Response;
 use Iblues\AnnotationTestUnit\Annotation\Request;
+use Iblues\AnnotationTestUnit\Annotation\Response;
 
 /**
  * 标记这是一个Api测试,一个控制器可以有多个
@@ -96,5 +96,6 @@ class Api
     public function handleResponse($testClass, $annotation)
     {
         $this->response->assert($annotation);
+        return $this->response;
     }
 }

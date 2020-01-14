@@ -133,15 +133,15 @@ class AnnotationTest extends TestCase
 注意逗号!
 
 
-@testNow //代表执行的测试要执行这个.避免全部执行很慢.
+@Test\Now //代表执行的测试要执行这个.避免全部执行很慢. 在Test\Api中
 
 //@testDebug //返回的内容都打印出来
 //@testTransaction true //事务默认就是开启.可以不设置
 
-@testApi (代表是api的测试)
-@testApi ( path = http://baidu.com , method=GET)
-@testApi ( path = /api/test/test/1 , method=POST)
-@testApi ( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
+@Test\Api (代表是api的测试)
+@Test\Api( path = http://baidu.com , method=GET)
+@Test\Api( path = /api/test/test/1 , method=POST)
+@Test\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
 
 @test\Request({1:21})   //json参数
 //@test\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
@@ -155,8 +155,13 @@ class AnnotationTest extends TestCase
   "data":{
     {"id":true}
    },
-   //@Test\assertJson(...), //等等其他的断言 未完成. 
+   @Test\TestAssert(...), //等等其他的断言 未完成. 
 }),
+
+
+@TestBefore() //请求前调用
+@TestAssert() //请求后调用
+
 ```
 ### DEMO
 

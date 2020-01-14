@@ -1,6 +1,7 @@
 <?php
 
 namespace Iblues\AnnotationTestUnit\Annotation;
+use App\Models\Common\CommonUser;
 
 /**
  * 标记这次请求的请求参数. 一个testAPi可以有多个TestRequest代表多次请求.
@@ -27,6 +28,8 @@ class Request
 
     public function handel($testClass, $method, $url)
     {
+        $user = CommonUser::first();
+        $testClass = $testClass->actingAs($user, 'api');
         if (is_null($this->request)) {
             return $testClass->json($method, $url);
         } else {

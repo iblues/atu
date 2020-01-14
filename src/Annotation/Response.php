@@ -2,6 +2,8 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
+use Symfony\Component\VarDumper\Dumper\CliDumper;
+
 /**
  * 检查返回的断言. 需要返回json的. data.id=true,data.title="正则表达式*",
  * @link https://github.com/iblues/annotation-test-unit
@@ -17,6 +19,7 @@ class Response
     protected $response;
     protected $expectHttpCode = null;
     protected $expectResponseJson;
+    public $debugInfo = [];
 
     public function __construct($data = [])
     {
@@ -60,12 +63,23 @@ class Response
 
     /**
      * 输出返回结果.
-     * @param $response
+     * @param $responseObj
      * @author Blues
      *
      */
-    public function dumpResponse($response)
+    public function dumpResponse($responseObj)
     {
+        $response = $responseObj->getData();
+        //如果是500报错
+        if ($responseObj->getStatusCode() == 500) {
+            if (property_exists($response, 'message')) {
+                $this->debugInfo['ErrorMsg'] = $response->message;
+            }
+            if (property_exists($response, 'data') && property_exists($response->data, 'message')) {
+                $this->debugInfo['ErrorMsg'] = $response->data->message;
+            }
+        }
+
         $vl = json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $array = json_decode($vl, 1);
         //如果层级太多了.大于16个. 就记录到日志中去
@@ -83,11 +97,11 @@ class Response
 
             $file = $filePath . '/' . $this->msectime() . '.json';
             if (file_put_contents($file, $vl)) {
-                dump(' |-- Respouse see file://' . $file);
+                $this->debugInfo['ResponseFile'] = 'file://' . $file;
             }
 
         } else {
-            dump($vl);
+            $this->debugInfo['Response'] = $vl;
         }
     }
 
@@ -124,8 +138,8 @@ class Response
             }
 
         } catch (\Exception $exception) {
-            $data = $this->response->getData();
-            $this->dumpResponse($data);
+            $this->dumpResponse($this->response);
+            $exception->debugInfo = $this->debugInfo;
             throw $exception;
         }
     }

@@ -47,11 +47,35 @@ class ApiTestFactory
         }
         $request = $annotation->handleRequest($this->testClass, $this->method, $this->url);
         try {
-            $annotation->handleResponse($this->testClass, $annotation);
+            $response = $annotation->handleResponse($this->testClass, $annotation);
         } catch (\Exception $e) {
-            dump('Code in ' . $this->methodPath . '(' . $this->fileLine . ")");
-            dump($request);
+            Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
+            $num = 10;
+            $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
+            $this->dump('URL', $request['url']);
+            $this->dump('Request', json_encode($request['request'], JSON_UNESCAPED_UNICODE));
+            if (property_exists($e, 'debugInfo')) {
+                foreach ($e->debugInfo as $key => $info) {
+                    $this->dump($key, $info);
+                }
+            }
             throw $e;
+        }
+    }
+
+    protected function dump($key, $val)
+    {
+        $stirng = ' - ' . str_pad($key, 15, ' ', STR_PAD_RIGHT) . ":   $val";
+        $strings = explode("\n", $val);
+        foreach ($strings as $key => $string) {
+            if ($key > 0) {
+                $strings[$key] = str_pad($key, 15, ' ', STR_PAD_RIGHT) . $string;
+            }
+        }
+        if ($key == 'ErrorMsg') {
+            Console::error($stirng);
+        } else {
+            Console::dump($stirng);
         }
     }
 }
