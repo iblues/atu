@@ -1,7 +1,6 @@
-<h1 align="center"> Annotation-test-unit ( ATU ) </h1>
+<h1 align="center"> Annotation-test-unit </h1>
 
-<p align="center">A phpUnit tool base on annotation and laravel
-
+<p align="center">A PhpUnit Tool Base on annotation and laravel .
 一个基于注解和laravel单元测试的 自动化测试包
 
 </p>
@@ -27,7 +26,7 @@
 
 ```
     //请确保use以下
-    use Iblues\AnnotationTestUnit\Annotation as Test;
+    use Iblues\AnnotationTestUnit\Annotation as ATU;
 
     //请确认有匹配的路由, 程序是根据路由的映射表进行查找. 如果路由映射错误, 会无法执行. 后期会处理这种问题
     /**
