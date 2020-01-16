@@ -43,13 +43,13 @@ class Annotation
                     $reflectionMethod = new ReflectionMethod($class, $method);
                     $doc = $reflectionMethod->getDocComment();
 
-                    //存在注释@Test\Api 才解析
-                    if (!stripos($doc, '@Test\Api') !== false) {
+                    //存在注释@ATU\Api 才解析
+                    if (!stripos($doc, '@ATU\Api') !== false) {
                         continue;
                     }
 
                     //有Test\Now的才执行
-                    if ($now && !stripos($doc, '@Test\Now')) {
+                    if ($now && !stripos($doc, '@ATU\Now')) {
                         continue;
                     }
 
@@ -66,7 +66,7 @@ class Annotation
 
 
                 } catch (\Exception $e) {
-                    throw new \Exception('解析失败:' . $class . '@' . $method . ':' . $e->getMessage());
+                    throw new \Exception('解析失败:' . $class . '@' . $method . "\n" . $e->getMessage());
                 }
             }
         }

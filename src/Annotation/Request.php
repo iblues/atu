@@ -28,8 +28,6 @@ class Request
 
     public function handel($testClass, $method, $url)
     {
-        $user = CommonUser::first();
-        $testClass = $testClass->actingAs($user, 'api');
         if (is_null($this->request)) {
             return $testClass->json($method, $url);
         } else {

@@ -28,6 +28,10 @@ class Api
     public $now = 0;
     public $urlPath = null;
     protected $httpMethod = null;
+    /**
+     * @var Login
+     */
+    public $login;
 
 
     public function __construct($data)
@@ -49,6 +53,8 @@ class Api
                 $this->response = $param;
             } elseif ($param instanceof Debug) {
                 $this->debug = $param;
+            } elseif ($param instanceof Login) {
+                $this->login = $param;
             }
 
         }
@@ -59,6 +65,9 @@ class Api
         }
         if (!$this->response) {
             $this->response = new Response();
+        }
+        if (!$this->login) {
+            $this->login = new Login();
         }
 //        dump($data);
     }
@@ -87,6 +96,9 @@ class Api
                 $url = preg_replace('/{.*?}/i', '', $url);
                 $url = $url . $this->urlPath;
             }
+        }
+        if ($this->login) {
+            $this->login->handel($testClass);
         }
         $response = $this->request->handel($testClass, $method, $url);
         $this->response->setRespone($response);

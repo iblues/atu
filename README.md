@@ -1,6 +1,7 @@
-<h1 align="center"> Annotation-test-unit </h1>
+<h1 align="center"> Annotation-test-unit ( ATU ) </h1>
 
-<p align="center">A PhpUnit Tool Base on annotation and laravel .
+<p align="center">A phpUnit tool base on annotation and laravel
+
 一个基于注解和laravel单元测试的 自动化测试包
 
 </p>
@@ -30,8 +31,8 @@
 
     //请确认有匹配的路由, 程序是根据路由的映射表进行查找. 如果路由映射错误, 会无法执行. 后期会处理这种问题
     /**
-     * @Test\Api(
-     *     @Test\Now(),
+     * @ATU\Api(
+     *     @ATU\Now(),
      * )
      */
     public function index(Request $request)
@@ -39,19 +40,19 @@
 
     /**
      * 请确保 xx/xx/1有数据
-     * @Test\Api(
+     * @ATU\Api(
      *     "path":1   
-     *      @Test\Now(),
+     *      @ATU\Now(),
      * )
      */
     public function show(Request $request)
     ....
 
    /**
-     * @Test\Api(
-     *     @Test\Now(),
-     *     @Test\Request({"title":122}),
-     *     @Test\Response({
+     * @ATU\Api(
+     *     @ATU\Now(),
+     *     @ATU\Request({"title":122}),
+     *     @ATU\Response({
      *      "data":{"id":true,"title":122}
      *     })
      * )
@@ -67,6 +68,7 @@ namespace Tests\Api;
 use Iblues\AnnotationTestUnit\Traits\ApiTest;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
+use App\Models\User;
 
 /**
  * 注解测试
@@ -89,14 +91,14 @@ class AnnotationTest extends TestCase
     }
 
     /**
-     * 测试带有@test\Api和@test\Now注解的
+     * 测试带有@ATU\Api和@ATU\Now注解的
      */
     public function testNow(){
         $this->doNow();
     }
 
     /**
-     * 测试带有@test\Api()注解的
+     * 测试带有@ATU\Api()注解的
      */
     public function testAll(){
        $this->doAll();
@@ -133,54 +135,60 @@ class AnnotationTest extends TestCase
 注意逗号!
 
 
-@Test\Now //代表执行的测试要执行这个.避免全部执行很慢. 在Test\Api中
+@ATU\Now //代表执行的测试要执行这个.避免全部执行很慢. 在Test\Api中
 
-//@testDebug //返回的内容都打印出来
-//@testTransaction true //事务默认就是开启.可以不设置
+//@ATUDebug //返回的内容都打印出来
+//@ATUTransaction true //事务默认就是开启.可以不设置
 
-@Test\Api (代表是api的测试)
-@Test\Api( path = http://baidu.com , method=GET)
-@Test\Api( path = /api/test/test/1 , method=POST)
-@Test\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
+@ATU\Api (代表是api的测试)
+@ATU\Api( path = http://baidu.com , method=GET)
+@ATU\Api( path = /api/test/test/1 , method=POST)
+@ATU\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
 
-@test\Request({1:21})   //json参数
-//@test\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
+@ATU\Request({1:21})   //json参数
+//@ATU\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
 
-//@testBefore(/test/test/TestBoot()); //优先调其他的, 未完成
-//@testBefore(@test('expressOrder')); //会将请求和返回的结果存下来 再议
+//@ATUBefore(/test/test/TestBoot()); //优先调其他的, 未完成
+//@ATUBefore(@ATU('expressOrder')); //会将请求和返回的结果存下来 再议
 
-@test\Response( 200 )  //默认就是200
-@Test\Response({
+@ATU\Response( 200 )  //默认就是200
+@ATU\Response({
   "data":true,
   "data":{
     {"id":true}
    },
-   @Test\TestAssert(...), //等等其他的断言 未完成. 
+   @ATU\TestAssert(...), //等等其他的断言 未完成. 
 }),
 
 
-@TestBefore() //请求前调用
-@TestAssert() //请求后调用
+$Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
+
+//可以传入@Response和@request 会处理成对应值返回.
+@ATU\After("assertDatabaseHas",{"user",
+    { "title" : @ATU\Response('data.title") }
+}),
+
+@ATU\Before("doSomeThing",{"tesst"});
 
 ```
 ### DEMO
 
 1.简易版 请求看是不是返回200
 ```
-@Test\Api(
-   @Test\Now(),
-   @Test\Request(),
-   @Test\Response({
+@ATU\Api(
+   @ATU\Now(),
+   @ATU\Request(),
+   @ATU\Response({
       "data":true
    }),
 )
 ```
 2.验证返回结果版本
 ```
-@Test\Api(
-   @Test\Now(),
-   @Test\Request(),
-   @Test\Response({
+@ATU\Api(
+   @ATU\Now(),
+   @ATU\Request(),
+   @ATU\Response({
       "data":true,
       "data":{
         {"id":true}
@@ -191,60 +199,77 @@ class AnnotationTest extends TestCase
 3.复杂版本.同一个控制器 多种请求.多个返回结果
 ```
 
-@Test\Api(
-  @Test\Now(),
-  @Test\Before(/test/test::function),
-  @Test\Request(),
-  @Test\Response(200,{
+@ATU\Api(
+  @ATU\Now(),
+  @ATU\Before(/test/test::function),
+  @ATU\Request(),
+  @ATU\Response(200,{
    "code":true,
    "data":{{"id":true,"user":true}},
-    @Test\Now(),@Test\Debug()
+    @ATU\Now(),@ATU\Debug()
   }),
-  @Test\Debug()
+  @ATU\Debug()
 )
 
 
 
 
-@Test\Api(
-  @Test\Now(),
-  @Test\Request({"title":122}),
-  @Test\Response({
+@ATU\Api(
+  @ATU\Now(),
+  @ATU\Request({"title":122}),
+  @ATU\Response({
    "data":{"title":122}
   }),
-  @Test\Debug()
+  @ATU\Debug()
 ),
 
 
-@Test\Api(
-  @Test\Now(),
-  @Test\Request({"title":1}),
-  @Test\Response(422,{
+@ATU\Api(
+  @ATU\Now(),
+  @ATU\Request({"title":1}),
+  @ATU\Response(422,{
    "data":{"title":true}
   }),
-  @Test\Debug()
+  @ATU\Debug()
 )
 ```
 
 4.结合larfree
 ```
-@Test\Api //完了. 所有参数自动构建.
+@ATU\Api //完了. 所有参数自动构建.
 ```
 
 5.调用模板
 ```
-@Test\Api(
-    @Test\Larfree('tes.test')
+@ATU\Api(
+    @ATU\Larfree('tes.test')
 )
 
 //然后定义? 
+```
+
+6.调用其他断言或者函数
+```
+@ATU\Api(
+  @ATU\Now(),
+  @ATU\Login(2),    
+  @ATU\Request({"title":"测试","content":123}),
+  @ATU\Response({
+   "data":{"id":true,"title":"测试"}
+  })
+  @ATU\Before("doSomeThing",{"tesst"});
+  @ATU\After("assertDatabaseHas",{"user",@ATU\Request}),
+  @ATU\After("assertDatabaseHas",{"user",
+   { "title" : @ATU\Response('data.title") }
+  }),
+)
 ```
 
 
 
 ## 其他  函数的常规测试 未完成的 待续
 ```
-@TestNow
+@ATUNow
 @assert(1,2) == 3
 ```
 
@@ -253,18 +278,21 @@ Q: 报错 got '@' at position
 A: 注解错误,  经常是少了逗号.
 
 
+Q: 报错  got ''' 
+A: 注解中请用双引号. 单引号不行. 如@ATU\Call("login");
 ## TodoList
-- [ ] testApi
+- [x] testApi
 - [x] testNow
-- [x] testParam
-- [ ] testParam 文件上传支持
+- [x] testRequest
+- [ ] testRequest 文件上传,随机种子
 - [x] testResponse
 - [ ] testResponse,正则和高级规则支持
 - [ ] testBefore
+- [ ] testAfter
 - [x] testResponse
 - [ ] testTransaction
 - [ ] testDebug
-- [ ] testName , testBefore
+- [ ] testName ,testTag
 
 ## Contributing
 

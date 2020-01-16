@@ -43,7 +43,7 @@ class ApiTestFactory
     {
         if ($annotation->now) {
             //如果是开启了当前测试. 提醒下哪些开了的 方便随时关闭
-            dump('@Test\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
+            dump('@ATU\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
         }
         $request = $annotation->handleRequest($this->testClass, $this->method, $this->url);
         try {
