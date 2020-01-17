@@ -17,6 +17,7 @@ class ApiTestFactory
     public $fileLine = null;
     public $methodPath = null;
     public $testClass = null;
+    protected $request;
 
     public function __construct($testClass, $param)
     {
@@ -41,13 +42,17 @@ class ApiTestFactory
 
     public function walkAnnotation(Api $annotation)
     {
+
+        $testClass = clone($this->testClass);
+
         if ($annotation->now) {
             //如果是开启了当前测试. 提醒下哪些开了的 方便随时关闭
             dump('@ATU\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
+
         }
-        $request = $annotation->handleRequest($this->testClass, $this->method, $this->url);
+        $request = $annotation->handleRequest($testClass, $this->method, $this->url);
         try {
-            $response = $annotation->handleResponse($this->testClass, $annotation);
+            $response = $annotation->handleResponse($testClass, $annotation, $request);
         } catch (\Exception $e) {
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
             $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");

@@ -8,7 +8,6 @@ namespace Iblues\AnnotationTestUnit\Annotation;
  * Class TestName
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Name

@@ -7,7 +7,6 @@ namespace Iblues\AnnotationTestUnit\Annotation;
  * @Annotation
  * @author Blues
  * Class Before
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Before

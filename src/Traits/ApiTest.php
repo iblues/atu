@@ -44,6 +44,15 @@ trait ApiTest
         return $this->actingAs($user, $this->guard ?? 'api');
     }
 
+    /**
+     * 避免变量污染,尽可能让每一次测试都独立. 目前发现的是登录会影响
+     * @author Blues
+     */
+    public function __clone()
+    {
+        $this->app = $this->createApplication();
+    }
+
 }
 
 

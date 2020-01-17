@@ -10,7 +10,7 @@ use Iblues\AnnotationTestUnit\Annotation\Response;
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
  * @author Blues
- * Class TestApi
+ * Class Api
  * @package Iblues\AnnotationTestUnit
  * @Target({"METHOD"})
  */
@@ -97,17 +97,17 @@ class Api
                 $url = $url . $this->urlPath;
             }
         }
-        if ($this->login) {
-            $this->login->handel($testClass);
-        }
+
+        $this->login->handel($testClass);
+
         $response = $this->request->handel($testClass, $method, $url);
         $this->response->setRespone($response);
         return ['method' => $method, 'url' => $url, 'request' => $this->request->getJsonRequest()];
     }
 
-    public function handleResponse($testClass, $annotation)
+    public function handleResponse($testClass, $annotation, $request)
     {
-        $this->response->assert($annotation);
+        $this->response->assert($annotation, $request);
         return $this->response;
     }
 }

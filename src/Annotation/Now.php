@@ -10,7 +10,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
  * Class Now
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Now

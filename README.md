@@ -163,7 +163,7 @@ class AnnotationTest extends TestCase
 $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
 
 //可以传入@Response和@request 会处理成对应值返回.
-@ATU\After("assertDatabaseHas",{"user",
+@ATU\Assert("assertDatabaseHas",{"user",
     { "title" : @ATU\Response('data.title") }
 }),
 
@@ -257,8 +257,8 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
    "data":{"id":true,"title":"测试"}
   })
   @ATU\Before("doSomeThing",{"tesst"});
-  @ATU\After("assertDatabaseHas",{"user",@ATU\Request}),
-  @ATU\After("assertDatabaseHas",{"user",
+  @ATU\Assert("assertDatabaseHas",{"user",@ATU\Request}),
+  @ATU\Assert("assertDatabaseHas",{"user",
    { "title" : @ATU\Response('data.title") }
   }),
 )
@@ -289,8 +289,6 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Call("login");
 - [ ] testBefore
 - [ ] testAfter
 - [x] testResponse
-- [ ] testTransaction
-- [ ] testDebug
 - [ ] testName ,testTag
 
 ## Contributing

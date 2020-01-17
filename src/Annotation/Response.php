@@ -3,6 +3,7 @@
 namespace Iblues\AnnotationTestUnit\Annotation;
 
 use Symfony\Component\VarDumper\Dumper\CliDumper;
+use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
 /**
  * 检查返回的断言. 需要返回json的. data.id=true,data.title="正则表达式*",
@@ -10,43 +11,40 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
  * @Annotation
  * @author Blues
  * Class Response
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Response
 {
-
+    use ParseValue;
     protected $response;
     protected $expectHttpCode = null;
     protected $expectResponseJson;
+    protected $asserts = [];
     public $debugInfo = [];
 
-    public function __construct($data = [])
+    public function __construct($data)
     {
         if (!isset($data['value'])) {
             return;
         }
-
-        $anns = $data['value'];
-        //如果是数组. 但是第一个key不是0. 就是json
-        if (is_array($anns) && $this->isAssoc($anns)) {
-            $anns = [$anns];
-        }
-
-        //不是数组的直接转数组
-        if (!is_array($anns)) {
-            $anns = [$anns];
-        }
+        $anns = $this->parseConstructValue($data);
 
         foreach ($anns as $an) {
             if (is_numeric($an)) {
                 $this->expectHttpCode = $an;
-            }
-            if (is_array($an)) {
-                $this->expectResponseJson = $an;
+                continue;
             }
 
-            //todo 其他断言方式
+            if ($an instanceof Assert) {
+                $this->asserts[] = $an;
+                continue;
+            }
+
+            if (is_array($an)) {
+                $this->expectResponseJson = $an;
+                continue;
+            }
+
         }
 
     }
@@ -124,10 +122,10 @@ class Response
         }
     }
 
-    public function assert($annotation)
+    public function assert($annotation, $request)
     {
         try {
-
+            $responseJson = $this->response->getData();
             if ($this->expectHttpCode)
                 $this->response->assertStatus($this->expectHttpCode);
             else {
@@ -137,6 +135,15 @@ class Response
 
             if ($this->expectResponseJson) {
                 $this->response->assertJson($this->expectResponseJson);
+            }
+
+            if ($this->asserts) {
+                foreach ($this->asserts as $assert) {
+                    /**
+                     * @var $assert Assert
+                     */
+                    $assert->handle($this->response, $request, $responseJson);
+                }
             }
 
         } catch (\Exception $exception) {

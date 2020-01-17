@@ -9,7 +9,6 @@ use App\Models\Common\CommonUser;
  * @Annotation
  * @author Blues
  * Class Request
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Request
