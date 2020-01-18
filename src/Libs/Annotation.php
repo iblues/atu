@@ -6,67 +6,106 @@ namespace Iblues\AnnotationTestUnit\Libs;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Illuminate\Support\Facades\Cache;
 use ReflectionClass;
 use ReflectionMethod;
 
 class Annotation
 {
+
     /**
      * @param string $now
      * @param string $name
      * @param array $tag
+     * @return array
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @author Blues
      *
      */
     static function getApiTest($now = '', $name = '', $tag = [])
     {
-        $routes = Routes::getRoutes();
+
+        $Cache = Cache::store('file');
+
+        //缓存系统;
+        $routes = $Cache->get('router');
+        if (!$routes) {
+            $routes = Routes::getRoutes();
+            //路由缓存60秒
+            //先不缓存. 后面做下处理. 检测路由对应文件的mtime改了才清理缓存.
+//            $Cache->set('router', $routes,60);
+        }
+
         $return = [];
+
+
+        //初始化解析器
+        $annotationReader = new AnnotationReader();
+        //OpenApi部分不用去解析
+        $whitelist = [
+            "OA", 'SWA', 'ORM'
+        ];
+        foreach ($whitelist as $v) {
+            AnnotationReader::addGlobalIgnoredNamespace($v);
+        }
+        AnnotationRegistry::registerLoader('class_exists');
+
+
         foreach ($routes as $key => $route) {
             if (strpos($route['path'], '@')) {
                 list($class, $method) = explode('@', $route['path']);
                 if (!method_exists($class, $method)) {
                     continue;
                 }
-                $annotationReader = new AnnotationReader();
 
-                //OpenApi部分不用去解析
-                $whitelist = [
-                    "OA", 'SWA', 'ORM'
-                ];
-                foreach ($whitelist as $v) {
-                    AnnotationReader::addGlobalIgnoredNamespace($v);
-                }
+                $fileName = (new ReflectionClass($class))->getFileName();
 
-                AnnotationRegistry::registerLoader('class_exists');
-                try {
-                    $reflectionMethod = new ReflectionMethod($class, $method);
-                    $doc = $reflectionMethod->getDocComment();
+                //获取最后修改时间
+                $mtime = filemtime($fileName);
+                $cacheName = md5(json_encode($route)) . $mtime;
 
-                    //存在注释@ATU\Api 才解析
-                    if (!stripos($doc, '@ATU\Api') !== false) {
-                        continue;
+                //如果修改时间没有变化,就读取缓存的.加快读取速度
+                if ($tmp = $Cache->get($cacheName)) {
+//                    $Cache->set($cacheName,null);
+                    if ($tmp != 'noAtu') {
+                        $return[] = $tmp;
                     }
 
-                    //有Test\Now的才执行
-                    if ($now && !stripos($doc, '@ATU\Now')) {
-                        continue;
+                } else {
+
+                    try {
+                        $reflectionMethod = new ReflectionMethod($class, $method);
+                        $doc = $reflectionMethod->getDocComment();
+
+                        //存在注释@ATU\Api 才解析
+                        if (!stripos($doc, '@ATU\Api') !== false) {
+                            $Cache->set($cacheName, 'noAtu');
+                            continue;
+                        }
+
+                        //有Test\Now的才执行
+                        if ($now && !stripos($doc, '@ATU\Now')) {
+                            //这个就不能缓存了.
+                            continue;
+                        }
+
+
+                        $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
+
+                        $route['httpMethod'] = $route['method'];
+                        $route['class'] = $class;
+                        $route['classPath'] = $fileName;
+                        $route['method'] = $method;
+                        $route['methodStartLine'] = $reflectionMethod->getStartLine();//函数开始的行数
+                        $route['annotation'] = $methodAnnotations;
+                        $Cache->set($cacheName, $route, 3600);
+                        $return[] = $route;
+
+
+                    } catch (\Exception $e) {
+                        throw new \Exception('解析失败:' . $class . '@' . $method . "\n" . $e->getMessage());
                     }
-
-
-                    $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
-
-                    $route['httpMethod'] = $route['method'];
-                    $route['class'] = $class;
-                    $route['classPath'] = (new ReflectionClass($class))->getFileName();
-                    $route['method'] = $method;
-                    $route['methodStartLine'] = $reflectionMethod->getStartLine();//函数开始的行数
-                    $route['annotation'] = $methodAnnotations;
-                    $return[] = $route;
-
-
-                } catch (\Exception $e) {
-                    throw new \Exception('解析失败:' . $class . '@' . $method . "\n" . $e->getMessage());
                 }
             }
         }
