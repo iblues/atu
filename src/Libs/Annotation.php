@@ -6,6 +6,7 @@ namespace Iblues\AnnotationTestUnit\Libs;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cache;
 use ReflectionClass;
 use ReflectionMethod;
@@ -14,17 +15,20 @@ class Annotation
 {
 
     /**
-     * @param string $now
-     * @param string $name
-     * @param array $tag
+     * @param string $filter
+     * @param bool $cache
      * @return array
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \ReflectionException
      * @author Blues
      *
      */
-    static function getApiTest($now = '', $name = '', $tag = [])
+    static function getApiTest($filter = '', $cache = true)
     {
+        $now = Arr::get($filter, 'now', 0);
+        $name = Arr::get($filter, 'name', '');
+        $tag = Arr::get($filter, 'tag', []);
 
         $Cache = Cache::store('file');
 
@@ -66,7 +70,7 @@ class Annotation
                 $cacheName = md5(json_encode($route)) . $mtime;
 
                 //如果修改时间没有变化,就读取缓存的.加快读取速度
-                if ($tmp = $Cache->get($cacheName)) {
+                if ($cache && $tmp = $Cache->get($cacheName)) {
 //                    $Cache->set($cacheName,null);
                     if ($tmp != 'noAtu') {
                         $return[] = $tmp;
@@ -110,12 +114,6 @@ class Annotation
             }
         }
         return $return;
-    }
-
-
-    static function getPhpDoc()
-    {
-
     }
 
 

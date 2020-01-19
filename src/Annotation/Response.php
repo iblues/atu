@@ -22,7 +22,7 @@ class Response
     protected $asserts = [];
     public $debugInfo = [];
 
-    public function __construct($data)
+    public function __construct($data = [])
     {
         if (!isset($data['value'])) {
             return;

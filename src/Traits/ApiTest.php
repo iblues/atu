@@ -12,7 +12,7 @@ trait ApiTest
 
     function doNow()
     {
-        $todoList = Annotation::getApiTest(1);
+        $todoList = Annotation::getApiTest(['now' => 1], 'false');
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
