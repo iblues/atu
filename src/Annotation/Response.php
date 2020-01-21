@@ -49,6 +49,11 @@ class Response
 
     }
 
+    public function getJsonRespone()
+    {
+        return $this->expectResponseJson;
+    }
+
     public function setRespone($response)
     {
         $this->response = $response;

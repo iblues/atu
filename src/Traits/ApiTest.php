@@ -12,7 +12,8 @@ trait ApiTest
 
     function doNow()
     {
-        $todoList = Annotation::getApiTest(['now' => 1], 'false');
+        $cache = $this->cache ?? true;
+        $todoList = Annotation::getApiTest(['now' => 1], $cache);
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
@@ -20,7 +21,8 @@ trait ApiTest
 
     function doAll()
     {
-        $todoList = Annotation::getApiTest();
+        $cache = $this->cache ?? true;
+        $todoList = Annotation::getApiTest([], $cache);
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
@@ -51,6 +53,20 @@ trait ApiTest
     public function __clone()
     {
         $this->app = $this->createApplication();
+    }
+
+
+    /**
+     * 由于有些断言是私有方法. 开个接口来调
+     * @param $func
+     * @param $param
+     * @return mixed
+     * @author Blues
+     *
+     */
+    public function callProtectedFunction($func, $param)
+    {
+        return call_user_func_array([$this, $func], $param);
     }
 
 }

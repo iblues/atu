@@ -21,7 +21,6 @@ class ApiTestFactory
 
     public function __construct($testClass, $param)
     {
-
         $this->testClass = $testClass;
         $this->url = $param['url'];
         $this->method = $param['httpMethod'];
@@ -54,7 +53,7 @@ class ApiTestFactory
         try {
             $response = $annotation->handleResponse($testClass, $annotation, $request);
             //处理跟返回参数无关的assert.比如数据库
-//            $annotation->handleAssert($testClass, $annotation, $request);
+            $annotation->handleAssert($testClass, $annotation, $request, $response);
         } catch (\Exception $e) {
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
             $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");

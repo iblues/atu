@@ -28,6 +28,8 @@ class Api
     public $now = 0;
     public $urlPath = null;
     protected $httpMethod = null;
+    protected $assert = [];
+    protected $fullRequest = [];
     /**
      * @var Login
      */
@@ -45,7 +47,6 @@ class Api
         foreach ($data['value'] as $param) {
 
             if ($param instanceof Now) {
-                $this->debug = new Debug();
                 $this->now = 1;
             } elseif ($param instanceof Request) {
                 $this->request = $param;
@@ -55,8 +56,9 @@ class Api
                 $this->debug = $param;
             } elseif ($param instanceof Login) {
                 $this->login = $param;
+            } elseif ($param instanceof Assert) {
+                $this->assert[] = $param;
             }
-
         }
 
         //如果没有 先赋个默认值
@@ -73,8 +75,10 @@ class Api
     }
 
     /**
-     *
-     * @param $testClass 测试类
+     * @param $testClass
+     * @param string $method
+     * @param $url
+     * @return array
      * @author Blues
      *
      */
@@ -102,12 +106,25 @@ class Api
 
         $response = $this->request->handel($testClass, $method, $url);
         $this->response->setRespone($response);
-        return ['method' => $method, 'url' => $url, 'request' => $this->request->getJsonRequest()];
+        $fullRequest = ['method' => $method, 'url' => $url, 'request' => $this->request->getJsonRequest()];
+        $this->fullRequest = $fullRequest;
+        return $fullRequest;
     }
 
     public function handleResponse($testClass, $annotation, $request)
     {
         $this->response->assert($annotation, $request);
         return $this->response;
+    }
+
+    public function handleAssert($testClass, $annotation, $request, $response)
+    {
+        foreach ($this->assert as $assert) {
+            /**
+             * @var $assert Assert
+             */
+            $assert->handle($testClass, $request, $response);
+        }
+//        $this->handleAssert();
     }
 }

@@ -4,6 +4,7 @@ namespace Iblues\AnnotationTestUnit\Annotation;
 
 use Iblues\AnnotationTestUnit\Traits\ParseValue;
 use Illuminate\Support\Arr;
+use phpDocumentor\Reflection\Types\Object_;
 
 /**
  * 测试的前置函数. 比如要先登录等.
@@ -29,13 +30,20 @@ class Assert
     }
 
 
-    function handle($testClass, $request, $responseJson)
+    function handle($testClass, Array $request, $response)
     {
         $this->request = $request;
-        $this->response = $responseJson;
+        $this->response = $response;
 
         array_walk($this->param, [$this, 'walkParam']);
-        return call_user_func_array([$testClass, $this->funcName], $this->param);
+
+        if (method_exists($testClass, 'callProtectedFunction')) {
+            $param = ['func' => $this->funcName, 'param' => $this->param];
+            return call_user_func_array([$testClass, 'callProtectedFunction'], $param);
+        } else {
+            return call_user_func_array([$testClass, $this->funcName], $this->param);
+        }
+
     }
 
 
@@ -52,8 +60,11 @@ class Assert
             if (gettype($value) == 'object') {
 
                 if ($value instanceof GetResponse) {
-                    $value = $value;
-//                    dump($value);
+                    if ($value) {
+                        $value = Arr::get($this->response->getJsonRespone(), $value->param);
+                    } else {
+                        $value = $this->response->getJsonRespone();
+                    }
                 }
                 //获取请求的变量.
                 if ($value instanceof GetRequest) {

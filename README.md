@@ -1,7 +1,6 @@
-<h1 align="center"> Annotation-test-unit </h1>
+<h1 align="center"> Annotation-test-unit (ATU) </h1>
 
-<p align="center">A PhpUnit Tool Base on annotation and laravel .
-一个基于注解和laravel单元测试的 自动化测试包
+<p align="center">A phpunit Tool Base on annotation and laravel.一个基于注解和laravel的单元测试包. 
 
 </p>
 
@@ -195,7 +194,7 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
    }),
 )
 ```
-3.复杂版本.同一个控制器 多种请求.多个返回结果
+3.复杂版本.同一个控制器 多种请求.多个返回结果;assert调用其他断言(可以调用自定义函数)
 ```
 
 @ATU\Api(
@@ -231,14 +230,35 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
   }),
   @ATU\Debug()
 )
+
+超复杂版本. 囊括了大部分用法
+@ATU\Api(
+  path = 1,
+  method = "PUT",
+  @ATU\Now(),
+  @ATU\Request({"title":"测试","content":123}),
+  @ATU\Response({
+     "data":{"id":true,"title":"测试"}
+    },
+    @ATU\Assert("assertSee",{"测试"}),
+    @ATU\Assert("assertSee",{@ATU\GetRequest("title")}),
+    @ATU\Assert("assertJson", {{"data":@ATU\GetRequest}} ),
+    @ATU\Assert("assertOk"),
+  ),
+  @ATU\Assert("assertDatabaseHas",{"test_test",{"id":1}} ),
+  @ATU\Assert("assertDatabaseHas",{"test_test",@ATU\GetRequest()}),
+  @ATU\Assert("assertDatabaseHas",{"test_test",
+   { "title" : @ATU\GetResponse("data.title") }
+  }),
+),
 ```
 
-4.结合larfree
+4.结合larfree 未完成
 ```
 @ATU\Api //完了. 所有参数自动构建.
 ```
 
-5.调用模板
+5.调用模板 未完成
 ```
 @ATU\Api(
     @ATU\Larfree('tes.test')
@@ -247,26 +267,9 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
 //然后定义? 
 ```
 
-6.调用其他断言或者函数
-```
-@ATU\Api(
-  @ATU\Now(),
-  @ATU\Login(2),    
-  @ATU\Request({"title":"测试","content":123}),
-  @ATU\Response({
-   "data":{"id":true,"title":"测试"}
-  })
-  @ATU\Before("doSomeThing",{"tesst"});
-  @ATU\Assert("assertDatabaseHas",{"user",@ATU\Request}),
-  @ATU\Assert("assertDatabaseHas",{"user",
-   { "title" : @ATU\Response('data.title") }
-  }),
-)
-```
 
 
-
-## 其他  函数的常规测试 未完成的 待续
+## 其他  函数的常规测试 未完成的 未完成
 ```
 @ATUNow
 @assert(1,2) == 3
@@ -278,18 +281,21 @@ A: 注解错误,  经常是少了逗号.
 
 
 Q: 报错  got ''' 
-A: 注解中请用双引号. 单引号不行. 如@ATU\Call("login");
+A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 ## TodoList
-- [x] testApi
-- [x] testNow
-- [x] testRequest
-- [ ] testRequest 文件上传,随机种子
-- [x] testResponse
-- [ ] testResponse,正则和高级规则支持
-- [ ] testBefore
-- [ ] testAfter
-- [x] testResponse
-- [ ] testName ,testTag
+@ATU\
+- [x] Api
+- [x] Now
+- [x] Request
+- [x] getRequest
+- [ ] Request 文件上传,随机种子
+- [x] Response
+- [x] getResponse
+- [ ] Response,正则和高级规则支持
+- [ ] Before
+- [x] Assert
+- [x] Response
+- [ ] Name ,Tag
 
 ## Contributing
 
