@@ -4,15 +4,25 @@
 namespace Iblues\AnnotationTestUnit\Traits;
 
 
+use Iblues\AnnotationTestUnit\Annotation\GetParam;
+use Iblues\AnnotationTestUnit\Annotation\GetRequest;
+use Iblues\AnnotationTestUnit\Annotation\GetResponse;
 use Iblues\AnnotationTestUnit\Annotation\Request;
 use Iblues\AnnotationTestUnit\Annotation\Response;
+use Illuminate\Support\Arr;
 
 Trait ParseValue
 {
 
+    /**
+     * 处理phpdoc传入的变量.
+     * @param $data
+     * @return array|mixed|void
+     * @author Blues
+     *
+     */
     protected function parseConstructValue($data)
     {
-
         if (!isset($data['value'])) {
             return;
         }
@@ -30,6 +40,30 @@ Trait ParseValue
         }
 
         return $value;
+    }
+
+
+    /**
+     * 把对象处理为字符
+     * @param $value
+     * @author Blues
+     */
+    protected function walkParam(&$value)
+    {
+        if (is_array($value)) {
+            array_walk($value, [$this, 'walkParam']);
+        } else {
+            if (gettype($value) == 'object') {
+
+                if ($value instanceof GetResponse) {
+                    $value = $value->handel($this->response->getJsonRespone());
+                } else if ($value instanceof GetRequest) {
+                    $value = $value->handel($this->request['request']);
+                } else if ($value instanceof GetParam) {
+                    $value = $value->handel();
+                }
+            }
+        }
     }
 
 }

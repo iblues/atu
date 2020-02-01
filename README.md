@@ -211,9 +211,6 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
   @ATU\Debug()
 )
 
-
-
-
 @ATU\Api(
   @ATU\Now(),
   @ATU\Request({"title":122}),
@@ -233,7 +230,8 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
   @ATU\Debug()
 )
 
-超复杂版本. 囊括了大部分用法
+复杂版本. 囊括了大部分用法
+
 @ATU\Api(
   path = 1,
   method = "PUT",
@@ -253,6 +251,39 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
    { "title" : @ATU\GetResponse("data.title") }
   }),
 ),
+
+
+@ATU\Api(
+  @ATU\Now(),
+  @ATU\Before("createTest",{"param":"not use"}),
+  @ATU\Request({"title":"测试","content":@ATU\GetParam("test.title")}),
+  @ATU\Response({
+     "data":{"id":true,"title":@ATU\GetRequest("title")}
+    },
+    @ATU\Assert("assertSee",{"测试"}),
+    @ATU\Assert("assertSee",{@ATU\GetRequest("title")}),
+    @ATU\Assert("assertJson", {{"data":@ATU\GetRequest}} ),
+    @ATU\Assert("assertOk"),
+  ),
+  @ATU\Assert("assertDatabaseHas",{"test_test",{"id":1}} ),
+  @ATU\Assert("assertDatabaseHas",{"test_test",@ATU\GetRequest()} ),
+  @ATU\Assert("assertDatabaseHas",{"test_test",
+   { "title" : @ATU\GetResponse("data.title") }
+  }),
+),
+
+
+@ATU\Api(
+  @ATU\Now(),
+  path={"http://baidu.com/",@ATU\GetParam("test.id"),"/otherUrl"},
+  method="GET",
+  @ATU\Before("createTest"),
+  @ATU\Response({
+   "status":1,
+   "data":{"title":@ATU\GetParam("test.title")},
+  }),
+  @ATU\Assert("assertDatabaseHas",{"test_test",{"title":@ATU\GetParam("test.title")} }),
+)
 ```
 
 4.结合larfree 未完成
@@ -300,7 +331,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] GetParam
 - [ ] Name ,Tag
 - [x] response 关于 GetRequest和GetParam
-- [ ] request 关于 getParam
+- [x] request 关于 getParam
 - [x] before 关于 getParam
 - [x] Assert 关于 getParam
 
