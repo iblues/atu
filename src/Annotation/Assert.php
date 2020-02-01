@@ -66,8 +66,9 @@ class Assert
                         $value = $this->response->getJsonRespone();
                     }
                 }
+
                 //获取请求的变量.
-                if ($value instanceof GetRequest) {
+                else if ($value instanceof GetRequest) {
                     $value->param;
                     //如果没有参数.就是获取全部
                     if (!$value->param) {

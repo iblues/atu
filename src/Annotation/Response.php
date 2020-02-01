@@ -2,6 +2,8 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
+use Iblues\AnnotationTestUnit\Libs\Param;
+use Illuminate\Support\Arr;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
@@ -18,8 +20,9 @@ class Response
     use ParseValue;
     protected $response;
     protected $expectHttpCode = null;
-    protected $expectResponseJson;
+    protected $expectResponseJson = [];
     protected $asserts = [];
+    protected $request = [];
     public $debugInfo = [];
 
     public function __construct($data = [])
@@ -49,9 +52,16 @@ class Response
 
     }
 
+    /**
+     * 获取数组格式的返回
+     * @return Array
+     * @author Blues
+     */
     public function getJsonRespone()
     {
-        return $this->expectResponseJson;
+        $data = $this->response->getData();
+        $data = json_decode(json_encode($data, JSON_UNESCAPED_UNICODE), 1);
+        return $data;
     }
 
     public function setRespone($response)
@@ -102,6 +112,10 @@ class Response
             if (file_put_contents($file, $vl)) {
                 $this->debugInfo['ResponseFile'] = 'file://' . $file;
             }
+            $vl = json_decode($vl);
+            $vl = json_encode($vl, JSON_UNESCAPED_UNICODE);
+            $this->debugInfo['Response'] = $vl;
+            ksort($this->debugInfo);
 
         } else {
             $vl = json_decode($vl);
@@ -137,10 +151,15 @@ class Response
                 $this->response->assertOk();//为啥用这个. 因为这个会包含201,200
             }
 
+            //将response信息写回debugInfo
+            $this->dumpResponse($this->response);
+
 
             if ($this->expectResponseJson) {
-                foreach ($this->expectResponseJson as $json)
+                foreach ($this->expectResponseJson as $json) {
+                    array_walk($json, [$this, 'walkParam']);
                     $this->response->assertJson($json);
+                }
             }
 
             if ($this->asserts) {
@@ -153,8 +172,6 @@ class Response
             }
 
         } catch (\Exception $exception) {
-            $this->dumpResponse($this->response);
-            $exception->debugInfo = $this->debugInfo;
             throw $exception;
         }
     }
@@ -174,6 +191,17 @@ class Response
     }
 
     /**
+     * 设置请求头. 方便读取
+     * @param $request
+     * @author Blues
+     *
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
+    }
+
+    /**
      * 判断是关联数组 还是顺序数组
      * @param array $arr
      * @return bool
@@ -184,5 +212,43 @@ class Response
         if (array() === $arr) return false;
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
+
+
+    /**
+     * 把对象处理为字符
+     * @param $value
+     * @author Blues
+     */
+    protected function walkParam(&$value)
+    {
+        if (is_array($value)) {
+            array_walk($value, [$this, 'walkParam']);
+        } else {
+            if (gettype($value) == 'object') {
+                if ($value instanceof GetRequest) {
+                    $value->param;
+                    //如果没有参数.就是获取全部
+                    if (!$value->param) {
+                        $value = $this->request['request'];
+                    } else {
+                        //获取指定的变量名
+                        $value = Arr::get($this->request['request'], $value->param);
+                    }
+                }
+
+                if ($value instanceof GetParam) {
+                    $value->param;
+                    //如果没有参数.就是获取全部
+                    if (!$value->param) {
+                        $value = Param::param();
+                    } else {
+                        //获取指定的变量名
+                        $value = Param::param($value->param);
+                    }
+                }
+            }
+        }
+    }
+
 
 }

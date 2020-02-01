@@ -162,6 +162,7 @@ class Api
 
     public function handleResponse($testClass, $annotation, $request)
     {
+        $this->response->setRequest($request);
         $this->response->assert($annotation, $request);
         return $this->response;
     }
