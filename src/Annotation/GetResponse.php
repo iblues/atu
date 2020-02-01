@@ -2,6 +2,7 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
+use Illuminate\Support\Arr;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
@@ -20,5 +21,17 @@ class GetResponse
     public function __construct($data = [])
     {
         $this->param = $data['value'] ?? null;
+    }
+
+    public function handel($jsonRespone)
+    {
+        //如果没有参数.就是获取全部
+        if (!$this->param) {
+            $value = $jsonRespone;
+        } else {
+            //获取指定的变量名
+            $value = Arr::get($jsonRespone, $this->param);
+        }
+        return $value;
     }
 }

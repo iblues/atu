@@ -47,49 +47,4 @@ class Assert
     }
 
 
-    /**
-     * 把对象处理为字符
-     * @param $value
-     * @author Blues
-     */
-    protected function walkParam(&$value)
-    {
-        if (is_array($value)) {
-            array_walk($value, [$this, 'walkParam']);
-        } else {
-            if (gettype($value) == 'object') {
-
-                if ($value instanceof GetResponse) {
-                    if ($value) {
-                        $value = Arr::get($this->response->getJsonRespone(), $value->param);
-                    } else {
-                        $value = $this->response->getJsonRespone();
-                    }
-                }
-
-                //获取请求的变量.
-                else if ($value instanceof GetRequest) {
-                    $value->param;
-                    //如果没有参数.就是获取全部
-                    if (!$value->param) {
-                        $value = $this->request['request'];
-                    } else {
-                        //获取指定的变量名
-                        $value = Arr::get($this->request['request'], $value->param);
-                    }
-                } else if ($value instanceof GetParam) {
-                    $value->param;
-                    //如果没有参数.就是获取全部
-                    if (!$value->param) {
-                        $value = Param::param();
-                    } else {
-                        //获取指定的变量名
-                        $value = Param::param($value->param);
-                    }
-                }
-
-
-            }
-        }
-    }
 }
