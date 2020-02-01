@@ -2,6 +2,7 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
+use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Traits\ParseValue;
 use Illuminate\Support\Arr;
 use phpDocumentor\Reflection\Types\Object_;
@@ -36,7 +37,6 @@ class Assert
         $this->response = $response;
 
         array_walk($this->param, [$this, 'walkParam']);
-
         if (method_exists($testClass, 'callProtectedFunction')) {
             $param = ['func' => $this->funcName, 'param' => $this->param];
             return call_user_func_array([$testClass, 'callProtectedFunction'], $param);
@@ -76,7 +76,18 @@ class Assert
                         //获取指定的变量名
                         $value = Arr::get($this->request['request'], $value->param);
                     }
+                } else if ($value instanceof GetParam) {
+                    $value->param;
+                    //如果没有参数.就是获取全部
+                    if (!$value->param) {
+                        $value = Param::param();
+                    } else {
+                        //获取指定的变量名
+                        $value = Param::param($value->param);
+                    }
                 }
+
+
             }
         }
     }

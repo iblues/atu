@@ -149,6 +149,7 @@ class Api
         $method = $this->httpMethod ?? $method;
 
         $url = $this->handelUrl($this->urlPath, $url);
+//        $this->urlPath= $url;
 
         $this->login->handel($testClass);
 
@@ -163,6 +164,11 @@ class Api
     {
         $this->response->assert($annotation, $request);
         return $this->response;
+    }
+
+    public function getResponeDebugInfo()
+    {
+        return $this->response->debugInfo;
     }
 
     public function handleAssert($testClass, $annotation, $request, $response)
