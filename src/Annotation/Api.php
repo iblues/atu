@@ -29,6 +29,7 @@ class Api
     public $urlPath = null;
     protected $httpMethod = null;
     protected $assert = [];
+    protected $before = [];
     protected $fullRequest = [];
     /**
      * @var Login
@@ -58,6 +59,8 @@ class Api
                 $this->login = $param;
             } elseif ($param instanceof Assert) {
                 $this->assert[] = $param;
+            } elseif ($param instanceof Before) {
+                $this->before[] = $param;
             }
         }
 
@@ -72,6 +75,31 @@ class Api
             $this->login = new Login();
         }
 //        dump($data);
+    }
+
+    /**
+     * 开始前的前置函数, 比如生成用户, 也可以登录,修改url等操作.
+     * @param $testClass
+     * @param $method
+     * @param $url
+     * @author Blues
+     *
+     */
+    public function handleBofore($testClass)
+    {
+//        dump($this->urlPath);
+        foreach ($this->before as $before) {
+            /**
+             * @var $before Before
+             */
+            try {
+                $before->handle($testClass);
+            } catch (\Exception $e) {
+                dump('回调错误' . $e->getMessage() . ' ' . $e->getFile() . ':' . $e->getLine());
+                throw $e;
+            }
+        }
+
     }
 
     /**

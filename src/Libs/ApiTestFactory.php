@@ -49,8 +49,9 @@ class ApiTestFactory
             dump('@ATU\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
 
         }
-        $request = $annotation->handleRequest($testClass, $this->method, $this->url);
         try {
+            $annotation->handleBofore($testClass);
+            $request = $annotation->handleRequest($testClass, $this->method, $this->url);
             $response = $annotation->handleResponse($testClass, $annotation, $request);
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);

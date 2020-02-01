@@ -3,12 +3,17 @@
 namespace Iblues\AnnotationTestUnit\Traits;
 
 use Iblues\AnnotationTestUnit\Libs\Annotation;
+use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
 use Tests\Feature\AnnotationTest;
 
 trait ApiTest
 {
-
+    /**
+     * 用来存储param相关变量
+     * @var array
+     */
+    public $param=[];
 
     function doNow()
     {
@@ -41,7 +46,16 @@ trait ApiTest
         if ($id == false) {
             return $this;
         }
-        $class = class_exists(\App\Models\Common\CommonUser::class) ? \App\Models\Common\CommonUser::class : \App\User::class;
+        if (property_exists($this, 'userModel')) {
+            $class = $class = $this->userModel;
+        }
+        else {
+            $class = class_exists(\App\Models\Common\CommonUser::class) ? \App\Models\Common\CommonUser::class : \App\User::class;
+        }
+
+        if(!class_exists($class)){
+            throw new \Exception("$class not exist, Please use \$this->userModel override it");
+        }
         $user = $id ? $class::find($id) : $class::first();
         return $this->actingAs($user, $this->guard ?? 'api');
     }
@@ -55,6 +69,28 @@ trait ApiTest
         $this->app = $this->createApplication();
     }
 
+    /**
+     * 设置变量 通过getParam()调用
+     * @param $key
+     * @param $data
+     * @return boolean|array
+     * @author Blues
+     *
+     */
+    public function setParam($key,$data){
+        return Param::Param($key,$data);
+    }
+
+    /**
+     * 设置变量 通过setParam()设置
+     * @param $key
+     * @return boolean|array
+     * @author Blues
+     *
+     */
+    public function getParam($key){
+        return Param::Param($key);
+    }
 
     /**
      * 由于有些断言是私有方法. 开个接口来调
@@ -67,6 +103,20 @@ trait ApiTest
     public function callProtectedFunction($func, $param)
     {
         return call_user_func_array([$this, $func], $param);
+    }
+
+
+
+    protected function getRandPhone(){
+        return '1'.rand(1300000000,9999999999);
+    }
+
+    protected function getRandEmail(){
+        return str_random(10).'@gmail.com';
+    }
+
+    protected function getPassword(){
+        return bcrypt('secret');
     }
 
 }
