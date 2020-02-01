@@ -4,6 +4,7 @@ namespace Iblues\AnnotationTestUnit\Annotation;
 
 use Iblues\AnnotationTestUnit\Annotation\Request;
 use Iblues\AnnotationTestUnit\Annotation\Response;
+use Iblues\AnnotationTestUnit\Annotation\GetParam;
 
 /**
  * 标记这是一个Api测试,一个控制器可以有多个
@@ -102,6 +103,38 @@ class Api
 
     }
 
+    protected function handelUrl($urlPath, $originUrl)
+    {
+        if ($urlPath) {
+            //如果不是数组的话. 先改成数组 统一处理
+            if (!is_array($urlPath)) {
+                $urlPath = [$urlPath];
+            }
+
+            //检查里面有没有getParam
+            foreach ($urlPath as $key => $path) {
+                if ($path instanceof GetParam) {
+                    $urlPath[$key] = $path->handel();
+                }
+            }
+
+            //第一个是/ 是根目录
+            if ($urlPath[0][0] == '/') {
+                $url = implode('', $urlPath);
+                //如果是http开头也直接用
+            } elseif (substr($urlPath[0], 0, 4) == 'http') {
+                $url = implode('', $urlPath);
+            } else {
+                //如果都不是.那就是单独的path参数. 拼接在后面
+                $url = preg_replace_array('/{.*?}/i', $urlPath, $originUrl);
+            }
+
+            $originUrl = $url;
+        }
+
+        return $originUrl;
+    }
+
     /**
      * @param $testClass
      * @param string $method
@@ -115,20 +148,7 @@ class Api
         //处理method,url  put:11.com
         $method = $this->httpMethod ?? $method;
 
-
-        if ($this->urlPath) {
-            //第一个是/ 就直接用
-            if ($this->urlPath[0] == '/') {
-                $url = $this->urlPath;
-                //如果是http开头也直接用
-            } elseif (substr($this->urlPath, 0, 4) == 'http') {
-                $url = $this->urlPath;
-            } else {
-                //如果都不是.那就是单独的path参数. 拼接在后面
-                $url = preg_replace('/{.*?}/i', '', $url);
-                $url = $url . $this->urlPath;
-            }
-        }
+        $url = $this->handelUrl($this->urlPath, $url);
 
         $this->login->handel($testClass);
 
@@ -153,6 +173,5 @@ class Api
              */
             $assert->handle($testClass, $request, $response);
         }
-//        $this->handleAssert();
     }
 }

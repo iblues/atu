@@ -37,8 +37,9 @@ trait ApiTest
     /**
      * 模拟登录. 如果没有会出错!
      * must have it!
-     * @param int $id
+     * @param bool $id
      * @return AnnotationTest
+     * @throws \Exception
      * @author Blues
      */
     public function login($id = true)

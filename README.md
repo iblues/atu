@@ -294,10 +294,15 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] Response
 - [x] getResponse
 - [ ] Response,正则和高级规则支持
-- [ ] Before
+- [x] Before
 - [x] Assert
 - [x] Response
+- [x] GetParam
 - [ ] Name ,Tag
+
+response 关于 GetRequest和GetParam
+request 关于 getParam
+before 关于 getParam
 
 ## Contributing
 

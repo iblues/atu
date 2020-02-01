@@ -41,7 +41,7 @@ class Response
             }
 
             if (is_array($an)) {
-                $this->expectResponseJson = $an;
+                $this->expectResponseJson[] = $an;
                 continue;
             }
 
@@ -139,7 +139,8 @@ class Response
 
 
             if ($this->expectResponseJson) {
-                $this->response->assertJson($this->expectResponseJson);
+                foreach ($this->expectResponseJson as $json)
+                    $this->response->assertJson($json);
             }
 
             if ($this->asserts) {

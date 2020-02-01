@@ -25,7 +25,7 @@ class Param
             $cache[$key] = $data;
             return true;
         } else {
-            return $key ? $cache : Arr::get($key);
+            return $key ? Arr::get($cache, $key) : $cache;
         }
 
     }

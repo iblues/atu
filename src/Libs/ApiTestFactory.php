@@ -58,8 +58,8 @@ class ApiTestFactory
         } catch (\Exception $e) {
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
             $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
-            $this->dump('URL', $request['url']);
-            $this->dump('Request', json_encode($request['request'], JSON_UNESCAPED_UNICODE));
+            $this->dump('URL', $request['url'] ?? '');
+            $this->dump('Request', json_encode($request['request'] ?? [], JSON_UNESCAPED_UNICODE));
             if (property_exists($e, 'debugInfo')) {
                 foreach ($e->debugInfo as $key => $info) {
                     $this->dump($key, $info);
