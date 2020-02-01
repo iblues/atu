@@ -56,14 +56,18 @@ class ApiTestFactory
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);
         } catch (\Exception $e) {
+            $debugInfo = [];
+            /**
+             * @var $annotation Api
+             */
+            $debugInfo = $annotation->getResponeDebugInfo();
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
             $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
+            $this->dump('METHOD', $this->method);
             $this->dump('URL', $request['url'] ?? '');
-            $this->dump('Request', json_encode($request['request'] ?? null, JSON_UNESCAPED_UNICODE));
-            if (property_exists($e, 'debugInfo')) {
-                foreach ($e->debugInfo as $key => $info) {
-                    $this->dump($key, $info);
-                }
+            $this->dump('Request', json_encode($request['request'] ?? [], JSON_UNESCAPED_UNICODE));
+            foreach ($debugInfo as $key => $info) {
+                $this->dump($key, $info);
             }
             throw $e;
         }

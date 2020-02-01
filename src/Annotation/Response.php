@@ -145,14 +145,15 @@ class Response
     {
         try {
             $responseJson = $this->response->getData();
+
+            //将response信息写回debugInfo
+            $this->dumpResponse($this->response);
+
             if ($this->expectHttpCode)
                 $this->response->assertStatus($this->expectHttpCode);
             else {
                 $this->response->assertOk();//为啥用这个. 因为这个会包含201,200
             }
-
-            //将response信息写回debugInfo
-            $this->dumpResponse($this->response);
 
 
             if ($this->expectResponseJson) {
