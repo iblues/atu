@@ -109,6 +109,30 @@ class AnnotationTest extends TestCase
        $this->doAll();
     }
 
+    /**
+     * 读取所有带有@ATU\Api主键的,看是否有对应的路由匹配. 如果没有匹配路由就报错. 可用@ignore暂时忽略
+     * @author Blues
+     */
+    public function testRouter(){
+        $this->checkRouter();
+    }
+
+    /**
+     * 用于给before使用的. 可以生成用户.
+     * @author Blues
+     */
+    public function createUser()
+    {
+        $user = [
+            'password' => $this->getPassword(),
+            'email' => $this->getRandEmail(),
+            'phone' => $this->getRandPhone(),
+            'name' => '测试',
+        ];
+        $model = $this->userModel::firstOrCreate($user);
+        $this->setParam('user',$model);
+    }
+
 }
 ```
 
