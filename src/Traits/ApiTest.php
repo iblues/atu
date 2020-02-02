@@ -68,6 +68,7 @@ trait ApiTest
     public function __clone()
     {
         $this->app = $this->createApplication();
+        $this->setUp();
     }
 
     /**

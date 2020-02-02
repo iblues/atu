@@ -79,14 +79,9 @@ class AnnotationTest extends TestCase
     //DatabaseTransactions自动开启事务. 这样不会写入数据库. 但是注意!事务外的应用读不起到数据库的写入值.
     use ApiTest,DatabaseTransactions;
 
+    //可以预处理一些东西.比如生成用户.
     public function setUp(): void
     {
-        //阻止commit提交导致脏数据库. 配合DatabaseTransactions同时使用
-        $mock = \Mockery::mock('alias:\DB');
-        $mock->shouldReceive('commit')
-            ->withAnyArgs()
-            ->andReturn('true');
-
         parent::setUp();
     }
 
