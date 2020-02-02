@@ -88,6 +88,13 @@ class Annotation
                             continue;
                         }
 
+                        //忽略的
+                        if (stripos($doc, '@ATU\ignore') !== false) {
+                            //忽略的就不执行了
+                            continue;
+                        }
+
+
                         //有Test\Now的才执行
                         if ($now && !stripos($doc, '@ATU\Now')) {
                             //这个就不能缓存了.

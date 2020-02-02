@@ -291,9 +291,11 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
 )
 ```
 
-4.结合larfree 未完成
+4.暂时忽略
 ```
-@ATU\Api //完了. 所有参数自动构建.
+@ATU\Api(
+  @ATU\Ignore
+)
 ```
 
 5.调用模板 未完成
@@ -339,6 +341,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] request 关于 getParam
 - [x] before 关于 getParam
 - [x] Assert 关于 getParam
+- [x] Ignore
 
 ## Contributing
 

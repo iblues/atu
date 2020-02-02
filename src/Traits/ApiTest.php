@@ -5,6 +5,7 @@ namespace Iblues\AnnotationTestUnit\Traits;
 use Iblues\AnnotationTestUnit\Libs\Annotation;
 use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
+use Iblues\AnnotationTestUnit\Libs\Routes;
 use Tests\Feature\AnnotationTest;
 
 trait ApiTest
@@ -13,9 +14,14 @@ trait ApiTest
      * 用来存储param相关变量
      * @var array
      */
-    public $param=[];
+    public $param = [];
 
-    function doNow()
+    /**
+     * 测试带有@ATU\Api和@ATU\Now注解的
+     * @author Blues
+     *
+     */
+    protected function doNow()
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['now' => 1], $cache);
@@ -24,13 +30,27 @@ trait ApiTest
         }
     }
 
-    function doAll()
+    /**
+     * 测试带有@ATU\Api()注解的
+     * @author Blues
+     */
+    protected function doAll()
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest([], $cache);
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
+    }
+
+
+    /**
+     * 读取所有带有@ATU\Api主键的,看是否有对应的路由匹配. 如果没有匹配路由就报错. 可用@ignore暂时忽略
+     * @author Blues
+     */
+    protected function checkRouter()
+    {
+        Routes::checkAllRoute($this);
     }
 
 
@@ -49,12 +69,11 @@ trait ApiTest
         }
         if (property_exists($this, 'userModel')) {
             $class = $class = $this->userModel;
-        }
-        else {
+        } else {
             $class = class_exists(\App\Models\Common\CommonUser::class) ? \App\Models\Common\CommonUser::class : \App\User::class;
         }
 
-        if(!class_exists($class)){
+        if (!class_exists($class)) {
             throw new \Exception("$class not exist, Please use \$this->userModel override it");
         }
         $user = $id ? $class::find($id) : $class::first();
@@ -68,7 +87,6 @@ trait ApiTest
     public function __clone()
     {
         $this->app = $this->createApplication();
-        $this->setUp();
     }
 
     /**
@@ -79,8 +97,9 @@ trait ApiTest
      * @author Blues
      *
      */
-    public function setParam($key,$data){
-        return Param::Param($key,$data);
+    public function setParam($key, $data)
+    {
+        return Param::Param($key, $data);
     }
 
     /**
@@ -90,7 +109,8 @@ trait ApiTest
      * @author Blues
      *
      */
-    public function getParam($key){
+    public function getParam($key)
+    {
         return Param::Param($key);
     }
 
@@ -108,16 +128,18 @@ trait ApiTest
     }
 
 
-
-    protected function getRandPhone(){
-        return '1'.rand(1300000000,9999999999);
+    protected function getRandPhone()
+    {
+        return '1' . rand(1300000000, 9999999999);
     }
 
-    protected function getRandEmail(){
-        return str_random(10).'@gmail.com';
+    protected function getRandEmail()
+    {
+        return str_random(10) . '@gmail.com';
     }
 
-    protected function getPassword(){
+    protected function getPassword()
+    {
         return bcrypt('secret');
     }
 
