@@ -62,15 +62,15 @@ class ApiTestFactory
 
             //如果有@ATU\debug()
             if ($annotation->debug)
-                $this->debugInfo($annotation, $startTime, 0);
+                $this->debugInfo($annotation, $request, $startTime, 0);
 
         } catch (\Exception $e) {
-            $this->debugInfo($annotation, $startTime, 1);
+            $this->debugInfo($annotation, $request, $startTime, 1);
             throw $e;
         }
     }
 
-    protected function debugInfo($annotation, $startTime = 0, $error = true)
+    protected function debugInfo($annotation, $request, $startTime = 0, $error = true)
     {
         $debugInfo = [];
         /**
