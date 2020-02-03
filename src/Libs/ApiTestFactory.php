@@ -86,7 +86,7 @@ class ApiTestFactory
         $this->dump('URL', $request['url'] ?? '');
         if ($startTime)
             $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
-        $this->dump('Request', json_encode($request['request'] ?? [], JSON_UNESCAPED_UNICODE));
+        $this->dump('Request', json_encode($request['request'] ?? null, JSON_UNESCAPED_UNICODE));
         foreach ($debugInfo as $key => $info) {
             if ($error && in_array($key, ['ErrorMsg', 'Response'])) {
                 $this->dump($key, $info, 1);
