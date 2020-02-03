@@ -84,7 +84,8 @@ class Annotation
 
                         //存在注释@ATU\Api 才解析
                         if (!stripos($doc, '@ATU\Api') !== false) {
-                            $Cache->set($cacheName, 'noAtu');
+                            //缓存24小时
+                            $Cache->set($cacheName, 'noAtu', now()->addMinutes(60 * 24));
                             continue;
                         }
 
