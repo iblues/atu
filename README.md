@@ -212,10 +212,11 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
    }),
 )
 ```
-2.验证返回结果版本
+2.验证返回结果版本 , 并输出debug
 ```
 @ATU\Api(
    @ATU\Now(),
+   @ATU\Debug(),
    @ATU\Request(),
    @ATU\Response({
       "data":true,
@@ -357,6 +358,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] getResponse
 - [ ] Response,正则和高级规则支持
 - [x] Before
+- [x] Degbug
 - [x] Assert
 - [x] Response
 - [x] GetParam

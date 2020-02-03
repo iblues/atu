@@ -51,29 +51,58 @@ class ApiTestFactory
         }
         try {
             $annotation->handleBofore($testClass);
+
+            $startTime = $this->msectime();
             $request = $annotation->handleRequest($testClass, $this->method, $this->url);
             $response = $annotation->handleResponse($testClass, $annotation, $request);
+
+
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);
+
+            //如果有@ATU\debug()
+            if ($annotation->debug)
+                $this->debugInfo($annotation, $startTime, 0);
+
         } catch (\Exception $e) {
-            $debugInfo = [];
-            /**
-             * @var $annotation Api
-             */
-            $debugInfo = $annotation->getResponeDebugInfo();
-            Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
-            $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
-            $this->dump('METHOD', $this->method);
-            $this->dump('URL', $request['url'] ?? '');
-            $this->dump('Request', json_encode($request['request'] ?? [], JSON_UNESCAPED_UNICODE));
-            foreach ($debugInfo as $key => $info) {
-                $this->dump($key, $info);
-            }
+            $this->debugInfo($annotation, $startTime, 1);
             throw $e;
         }
     }
 
-    protected function dump($key, $val)
+    protected function debugInfo($annotation, $startTime = 0, $error = true)
+    {
+        $debugInfo = [];
+        /**
+         * @var $annotation Api
+         */
+        $debugInfo = $annotation->getResponeDebugInfo();
+        if ($error)
+            Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
+        else
+            Console::info(' ----------------------------------------- INFO ------------------------------------------');
+        $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
+        $this->dump('METHOD', $this->method);
+        $this->dump('URL', $request['url'] ?? '');
+        if ($startTime)
+            $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
+        $this->dump('Request', json_encode($request['request'] ?? [], JSON_UNESCAPED_UNICODE));
+        foreach ($debugInfo as $key => $info) {
+            if ($error && in_array($key, ['ErrorMsg', 'Response'])) {
+                $this->dump($key, $info, 1);
+            } else {
+                $this->dump($key, $info);
+            }
+        }
+
+        if ($error)
+            Console::error(' ----------------------------------------- END -------------------------------------------');
+        else
+            Console::info(' ----------------------------------------- END -------------------------------------------');
+
+    }
+
+    protected function dump($key, $val, $error = false)
     {
         $strings = explode("\n", $val);
         foreach ($strings as $k => $string) {
@@ -83,10 +112,23 @@ class ApiTestFactory
         }
         $stirng = implode("\n", $strings);
         $stirng = ' - ' . str_pad($key, 15, ' ', STR_PAD_RIGHT) . ":   {$stirng}";
-        if (in_array($key, ['ErrorMsg', 'Response'])) {
+        if ($error) {
             Console::error($stirng);
         } else {
             Console::dump($stirng);
         }
+    }
+
+    /**
+     * 返回毫秒
+     * @return float
+     * @author Blues
+     *
+     */
+    protected function msectime()
+    {
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        return $msectime;
     }
 }
