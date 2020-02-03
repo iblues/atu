@@ -152,7 +152,7 @@ class AnnotationTest extends TestCase
  
  2.设置插件
  use Alisa:
- Iblues\AnnotationTestUnit\Annotation  as  Test
+ Iblues\AnnotationTestUnit\Annotation  as  ATU
  
  
 
