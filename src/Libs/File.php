@@ -1,0 +1,57 @@
+<?php
+
+
+namespace Iblues\AnnotationTestUnit\Libs;
+
+
+class File
+{
+
+    /**
+     * remove h ago files
+     * @param int $hour
+     * @author Blues
+     */
+    static public function clearFile($hour = 1)
+    {
+        $filePath = storage_path('testResponse');
+        $list = scandir($filePath);
+        foreach ($list as $file) {
+            $name = pathinfo($file);
+            if ($name['filename'] && $name['filename'] != '.'
+                && ($name['filename'] < (time() - 3600 * $hour) . '000')) {
+                unlink($filePath . '/' . $file);
+            }
+        }
+    }
+
+    static function saveFile($file, $data)
+    {
+        $filePath = storage_path('ATU');
+        if (!file_exists($filePath)) {
+            mkdir($filePath);
+        }
+        //创建git忽略
+        if (!file_exists($filePath . '/.gitignore')) {
+            file_put_contents($filePath . '/.gitignore', "*\r\n!.gitignore");
+        }
+
+        $file = $filePath . '/' . $file . '-' . self::msectime() . '.json';
+        $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        file_put_contents($file, $data);
+        return $file;
+    }
+
+    /**
+     * 返回毫秒
+     * @return float
+     * @author Blues
+     *
+     */
+    static function msectime()
+    {
+        list($msec, $sec) = explode(' ', microtime());
+        $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
+        return $msectime;
+    }
+}

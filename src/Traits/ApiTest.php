@@ -15,6 +15,7 @@ trait ApiTest
      * @var array
      */
     public $param = [];
+    public $loginUser = null;
 
     /**
      * 测试带有@ATU\Api和@ATU\Now注解的
@@ -77,6 +78,7 @@ trait ApiTest
             throw new \Exception("$class not exist, Please use \$this->userModel override it");
         }
         $user = $id ? $class::find($id) : $class::first();
+        $this->loginUser = $user;
         return $this->actingAs($user, $this->guard ?? 'api');
     }
 

@@ -13,7 +13,7 @@ class Console
 
     static function info($data)
     {
-        print("\033[1;33;40m $data \033[0m \r\n");
+        print("\033[1;33;48m $data \033[0m \r\n");
     }
 
     static function error($data)

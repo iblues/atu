@@ -6,6 +6,9 @@ namespace Iblues\AnnotationTestUnit\Libs;
 
 use Iblues\AnnotationTestUnit\Annotation\Api;
 use Iblues\AnnotationTestUnit\Annotation\TestApi;
+use Iblues\AnnotationTestUnit\Libs\Php2Curl;
+use Illuminate\Foundation\Testing\TestResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ApiTestFactory
 {
@@ -56,21 +59,26 @@ class ApiTestFactory
             $request = $annotation->handleRequest($testClass, $this->method, $this->url);
             $response = $annotation->handleResponse($testClass, $annotation, $request);
 
-
+//dump($response);
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);
 
+            //登录验证参数,给curl用
+            $loginUser = $testClass->loginUser;
+            $token = \Auth::guard($testClass->guard ?? 'api')->login($loginUser);
+            $request['headers']['Authorization'] = 'bearer ' . $token;
+
             //如果有@ATU\debug()
             if ($annotation->debug)
-                $this->debugInfo($annotation, $request, $startTime, 0);
+                $this->debugInfo($annotation, $request, $startTime, $loginUser, 0);
 
         } catch (\Exception $e) {
-            $this->debugInfo($annotation, $request, $startTime, 1);
+            $this->debugInfo($annotation, $request, $startTime, $loginUser, 1);
             throw $e;
         }
     }
 
-    protected function debugInfo($annotation, $request, $startTime = 0, $error = true)
+    protected function debugInfo($annotation, $request, $startTime = 0, $loginUser, $error = true)
     {
         $debugInfo = [];
         /**
@@ -82,11 +90,14 @@ class ApiTestFactory
         else
             Console::info(' ----------------------------------------- INFO ------------------------------------------');
         $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
-        $this->dump('METHOD', $this->method);
-        $this->dump('URL', $request['url'] ?? '');
+        $this->dump('URL', $this->method . '  -  ' . $request['url'] ?? '');
+        if ($loginUser) {
+            $this->dump('Login ID', $loginUser->id);
+        }
+        $this->dump('Request', json_encode($request['request'] ?? null, JSON_UNESCAPED_UNICODE));
+        $this->dump('CURL', $this->toCurlCommand($request));
         if ($startTime)
             $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
-        $this->dump('Request', json_encode($request['request'] ?? null, JSON_UNESCAPED_UNICODE));
         foreach ($debugInfo as $key => $info) {
             if ($error && in_array($key, ['ErrorMsg', 'Response'])) {
                 $this->dump($key, $info, 1);
@@ -95,11 +106,27 @@ class ApiTestFactory
             }
         }
 
+
         if ($error)
             Console::error(' ----------------------------------------- END -------------------------------------------');
         else
             Console::info(' ----------------------------------------- END -------------------------------------------');
 
+    }
+
+    protected function toCurlCommand($request)
+    {
+        $get = [];
+        $post = $request['request'];
+        if ($request['url'][0] !== '/') {
+            $request['url'] = '/' . $request['url'];
+        }
+        $server = ['REQUEST_METHOD' => $request['method'], 'SERVER_NAME' => $_ENV['APP_URL'], 'REQUEST_URI' => $request['url']];
+        $headers = $request['headers'];
+        $headers['content-type'] = 'application/javascript';
+        $phpInput = [];
+        $curl = (new Php2Curl($get, $post, [], $server, $headers, $phpInput))->doAll();
+        return 'file://' . File::saveFile('CURL', $curl);
     }
 
     protected function dump($key, $val, $error = false)

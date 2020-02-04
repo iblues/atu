@@ -2,6 +2,7 @@
 
 namespace Iblues\AnnotationTestUnit\Annotation;
 
+use Iblues\AnnotationTestUnit\Libs\File;
 use Iblues\AnnotationTestUnit\Libs\Param;
 use Illuminate\Support\Arr;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
@@ -93,51 +94,23 @@ class Response
             }
         }
 
-        $vl = json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-        $array = json_decode($vl, 1);
+        //转成array
+        $array = json_decode(json_encode($response), 1);
         //如果层级太多了.大于16个. 就记录到日志中去
-        if (count($array, 1) > 16) {
+        if (count($array, 1) > 2) {
             //创建日志
-            $filePath = storage_path('testResponse');
-            if (!file_exists($filePath)) {
-                mkdir($filePath);
-            }
-            $this->clearResponeFile();
-            //创建git忽略
-            if (!file_exists($filePath . '/.gitignore')) {
-                file_put_contents($filePath . '/.gitignore', "*\r\n!.gitignore");
-            }
 
-            $file = $filePath . '/' . $this->msectime() . '.json';
-            if (file_put_contents($file, $vl)) {
-                $this->debugInfo['ResponseFile'] = 'file://' . $file;
-            }
-            $vl = json_decode($vl);
-            $vl = json_encode($vl, JSON_UNESCAPED_UNICODE);
+            File::clearFile(1);
+            $file = File::saveFile('response', $response);
+            $this->debugInfo['Response File'] = 'file://' . $file;
+
+            $vl = json_encode($array, JSON_UNESCAPED_UNICODE);
             $this->debugInfo['Response'] = $vl;
             ksort($this->debugInfo);
 
         } else {
-            $vl = json_decode($vl);
-            $vl = json_encode($vl, JSON_UNESCAPED_UNICODE);
+            $vl = json_encode($array, JSON_UNESCAPED_UNICODE);
             $this->debugInfo['Response'] = $vl;
-        }
-    }
-
-    /**
-     * remove 1h ago files
-     * @author Blues
-     */
-    public function clearResponeFile()
-    {
-        $filePath = storage_path('testResponse');
-        $list = scandir($filePath);
-        foreach ($list as $file) {
-            $name = pathinfo($file);
-            if ($name['filename'] && $name['filename'] != '.'
-                && ($name['filename'] < (time() - 3600) . '000')) {
-                unlink($filePath . '/' . $file);
-            }
         }
     }
 
@@ -179,19 +152,6 @@ class Response
 
 
     /**
-     * 返回毫秒
-     * @return float
-     * @author Blues
-     *
-     */
-    protected function msectime()
-    {
-        list($msec, $sec) = explode(' ', microtime());
-        $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
-        return $msectime;
-    }
-
-    /**
      * 设置请求头. 方便读取
      * @param $request
      * @author Blues
@@ -213,8 +173,6 @@ class Response
         if (array() === $arr) return false;
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
-
-
 
 
 }
