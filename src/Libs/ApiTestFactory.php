@@ -65,8 +65,10 @@ class ApiTestFactory
 
             //登录验证参数,给curl用
             $loginUser = $testClass->loginUser;
-            $token = \Auth::guard($testClass->guard ?? 'api')->login($loginUser);
-            $request['headers']['Authorization'] = 'bearer ' . $token;
+            if ($loginUser) {
+                $token = \Auth::guard($testClass->guard ?? 'api')->login($loginUser);
+                $request['headers']['Authorization'] = 'bearer ' . $token;
+            }
 
             //如果有@ATU\debug()
             if ($annotation->debug)
@@ -122,7 +124,7 @@ class ApiTestFactory
             $request['url'] = '/' . $request['url'];
         }
         $server = ['REQUEST_METHOD' => $request['method'], 'SERVER_NAME' => $_ENV['APP_URL'], 'REQUEST_URI' => $request['url']];
-        $headers = $request['headers'];
+        $headers = $request['headers'] ?? [];
         $headers['content-type'] = 'application/javascript';
         $phpInput = [];
         $curl = (new Php2Curl($get, $post, [], $server, $headers, $phpInput))->doAll();
