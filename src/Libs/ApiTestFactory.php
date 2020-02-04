@@ -75,12 +75,12 @@ class ApiTestFactory
                 $this->debugInfo($annotation, $request, $startTime, $loginUser, 0);
 
         } catch (\Exception $e) {
-            $this->debugInfo($annotation, $request, $startTime, $loginUser, 1);
+            $this->debugInfo($annotation, $request ?? [], $startTime ?? 0, $loginUser ?? null, 1);
             throw $e;
         }
     }
 
-    protected function debugInfo($annotation, $request, $startTime = 0, $loginUser, $error = true)
+    protected function debugInfo($annotation, $request, $startTime = 0, $loginUser = null, $error = true)
     {
         $debugInfo = [];
         /**

@@ -14,13 +14,15 @@ class File
      */
     static public function clearFile($hour = 1)
     {
-        $filePath = storage_path('testResponse');
+        $filePath = storage_path('ATU');
         $list = scandir($filePath);
         foreach ($list as $file) {
             $name = pathinfo($file);
-            if ($name['filename'] && $name['filename'] != '.'
-                && ($name['filename'] < (time() - 3600 * $hour) . '000')) {
-                unlink($filePath . '/' . $file);
+            if ($name['filename'] && $name['filename'] != '.') {
+                $time = explode('-', $name['filename']);
+                if (isset($time[1]) && $time[1] < (time() - 3600 * $hour) . '000') {
+                    unlink($filePath . '/' . $file);
+                }
             }
         }
     }
