@@ -92,7 +92,7 @@ class ApiTestFactory
         else
             Console::info(' ----------------------------------------- INFO ------------------------------------------');
         $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
-        $this->dump('URL', $this->method . '  -  ' . $request['url'] ?? '');
+        $this->dump('URL', $this->method . '  -  ' . @$request['url'] ?? '');
         if ($loginUser) {
             $this->dump('Login ID', $loginUser->id);
         }
@@ -119,9 +119,11 @@ class ApiTestFactory
     protected function toCurlCommand($request)
     {
         $get = [];
-        $post = $request['request'];
-        if ($request['url'][0] !== '/') {
-            $request['url'] = '/' . $request['url'];
+        $request['method'] = $request['method'] ?? '';
+
+        $post = $request['request'] ?? [];
+        if (@$request['url'][0] !== '/') {
+            @$request['url'] = '/' . $request['url'];
         }
         $server = ['REQUEST_METHOD' => $request['method'], 'SERVER_NAME' => $_ENV['APP_URL'], 'REQUEST_URI' => $request['url']];
         $headers = $request['headers'] ?? [];

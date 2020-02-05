@@ -65,7 +65,13 @@ trait ApiTest
      */
     public function login($id = true)
     {
+        $driver = $this->guard ?? 'api';
         if ($id == false) {
+            $id = $this->app['auth']->guard($driver)->id();
+            if ($id) {
+                $this->app['auth']->guard($driver)->logout();
+                $this->app['auth']->shouldUse($driver);
+            }
             return $this;
         }
         if (property_exists($this, 'userModel')) {
@@ -79,7 +85,7 @@ trait ApiTest
         }
         $user = $id ? $class::find($id) : $class::first();
         $this->loginUser = $user;
-        return $this->actingAs($user, $this->guard ?? 'api');
+        return $this->actingAs($user, $driver);
     }
 
     /**
@@ -88,7 +94,11 @@ trait ApiTest
      */
     public function __clone()
     {
-        $this->app = $this->createApplication();
+        $isolateApp = $this->isolateApp ?? true;
+        if ($isolateApp) {
+            $this->app = $this->createApplication();
+            $this->setUp();
+        }
     }
 
     /**

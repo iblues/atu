@@ -89,28 +89,47 @@ class AnnotationTest extends TestCase
     //解决办法.在parent::setUp();后面多写几个\DB::beginTransaion(). 让事务始终比commit多.
     use ApiTest,DatabaseTransactions;
 
-    //可以预处理一些东西.比如生成用户.
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
+    //是否深度隔离各个$app. 开启:降低性能,setUp会执行多次. 关闭:可能造成未知错误.
+    protected $isolateApp = true;
+    //是否启用缓存,加速解析.
+    protected $cache = true;
 
     /**
-     * 测试带有@ATU\Api和@ATU\Now注解的
+     * setUp会执行多次, 如果只想执行一次,请用AtuSetUp代替
+     * @author Blues
      */
-    public function testNow(){
-        $this->doNow();
+    public function AtuSetUp(){
+        //仅执行一次
+        static $done = false;
+        if($done){
+            return '';
+        }
+        $done=true;
     }
 
     /**
      * 测试带有@ATU\Api()注解的
+     * @author Blues
      */
-    public function testAll(){
-       $this->doAll();
+    public function testAll()
+    {
+        $this->AtuSetUp();
+        $this->doAll();
     }
 
     /**
-     * 读取所有带有@ATU\Api主键的,看是否有对应的路由匹配. 如果没有匹配路由就报错. 可用@ignore暂时忽略
+     * 测试带有@ATU\Api和@ATU\Now注解的
+     * @author Blues
+     *
+     */
+    public function testNow()
+    {
+        $this->AtuSetUp();
+        $this->doNow();
+    }
+
+    /**
+     * 读取所有带有@ATU\Api注解的,看是否有对应的路由匹配. 如果没有匹配路由就报错. 可用@ignore暂时忽略
      * @author Blues
      */
     public function testRouter(){

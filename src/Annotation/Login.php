@@ -30,7 +30,7 @@ class Login
         if ($this->data) {
             return $testClass->login($this->data);
         } else {
-            return $testClass;
+            return $testClass->login(null);
         }
     }
 }
