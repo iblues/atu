@@ -6,6 +6,7 @@ namespace Iblues\AnnotationTestUnit\Libs;
 
 class File
 {
+    const DIRNAME = 'ATU';
 
     /**
      * remove h ago files
@@ -14,7 +15,9 @@ class File
      */
     static public function clearFile($hour = 1)
     {
-        $filePath = storage_path('ATU');
+
+        self::mkdir();
+        $filePath = storage_path(self::DIRNAME);
         $list = scandir($filePath);
         foreach ($list as $file) {
             $name = pathinfo($file);
@@ -27,9 +30,9 @@ class File
         }
     }
 
-    static function saveFile($file, $data)
+    static function mkdir()
     {
-        $filePath = storage_path('ATU');
+        $filePath = storage_path(self::DIRNAME);
         if (!file_exists($filePath)) {
             mkdir($filePath);
         }
@@ -37,7 +40,12 @@ class File
         if (!file_exists($filePath . '/.gitignore')) {
             file_put_contents($filePath . '/.gitignore', "*\r\n!.gitignore");
         }
+    }
 
+    static function saveFile($file, $data)
+    {
+        self::mkdir();
+        $filePath = storage_path(self::DIRNAME);
         $file = $filePath . '/' . $file . '-' . self::msectime() . '.json';
         $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         file_put_contents($file, $data);
