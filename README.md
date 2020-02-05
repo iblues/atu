@@ -23,16 +23,7 @@ $ composer require iblues/annotation-test-unit -vvv
 ```
 2.配置好单元测试,教程:
 <https://www.w3cschool.cn/intellij_idea_doc/using_phpunit_framework.html>
-
-PS:有效的设置测试环境可以避免脏正式数据. 下为laravel默认,但是需要设置phpunit配置后才会启用.
-```xml
-      <env name="APP_ENV" value="testing"/>
-      <env name="BCRYPT_ROUNDS" value="4"/>
-      <env name="CACHE_DRIVER" value="array"/> //缓存改为内存模式,即不会增加本地缓存,但也会让不同测试之前无法共享缓存
-      <env name="SESSION_DRIVER" value="array"/>
-      <env name="QUEUE_DRIVER" value="sync"/> //队列设置为同步模式, 即无效再单独开启队列
-      <env name="MAIL_DRIVER" value="array"/> 
-```
+PS:有效的设置测试环境可以避免脏正式数据.
 
 3.找一个控制器.增加注解.
 
