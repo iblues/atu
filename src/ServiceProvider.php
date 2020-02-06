@@ -11,7 +11,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
     {
         $path = dirname(__DIR__);
         $this->publishes([
-            $path . '/Publish/tests' => base_path('tests/'),
+            $path . '/src/Publish/tests' => base_path('tests/'),
         ], 'ATU');
     }
 }
