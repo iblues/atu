@@ -15,5 +15,12 @@
     },
     "require": {
         "php": ">=7.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Iblues\\AnnotationTestUnit\\ServiceProvider"
+            ]
+        }
     }
 }
