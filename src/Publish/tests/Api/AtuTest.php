@@ -44,14 +44,14 @@ class AtuTest extends TestCase
      * 符合要求的api才执行. 此功能未完成!
      * @var array
      */
-    protected $whiteList = ['get' => [], 'put' => [], 'delete' => [], 'post' => []];
+    public $whiteList = ['get' => [], 'put' => [], 'delete' => [], 'post' => []];
 //    protected $whiteList = ['get' => ['/api\/admin\/.*?/i'], 'put'=>['/api\/[^((?!admin).)*$]/i', 'delete'=>'', 'post'=>''];
 
     /**
      * 满足要求的api不执行. 此功能未完成!
      * @var array
      */
-    protected $blackList = ['get' => [], 'put' => [], 'delete' => [], 'post' => []];
+    public $blackList = ['get' => [], 'put' => [], 'delete' => [], 'post' => []];
 //    protected $blackList = ['get' => ['/api\/admin\/.*?/i'], 'put'=>['/api\/[^((?!admin).)*$]/i', 'delete'=>'', 'post'=>''];
 
 

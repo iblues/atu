@@ -1,4 +1,5 @@
 <?php
+
 namespace Iblues\AnnotationTestUnit\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -8,9 +9,10 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @author Blues
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
- * Class Ignore
+ * Class IgnoreRouterCheck
  * @package Iblues\AnnotationTestUnit
  */
-class Ignore
+class RouteIgnore
 {
+
 }

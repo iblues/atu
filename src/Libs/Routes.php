@@ -72,8 +72,12 @@ class Routes
                     echo '@ATU\Ignore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . ' ) ';
                     continue;
                 }
+                if (stripos($doc, '@ATU\RouteIgnore') !== false) {
+                    echo '@ATU\RouteIgnore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . ' ) ';
+                    continue;
+                }
                 if (!in_array($fullPath, $routes)) {
-                    throw new \Exception($fullPath . " hasn't match route. You can use @ATU\Ignore to ignore that ATU \r\n " . $filePath . ':' . $method->getStartLine());
+                    throw new \Exception($fullPath . " hasn't match route. You can use @ATU\Ignore Or @ATU\IgnoreRouterCheck to ignore that ATU \r\n " . $filePath . ':' . $method->getStartLine());
                 }
             }
         }

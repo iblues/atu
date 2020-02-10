@@ -294,7 +294,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] before 关于 getParam
 - [x] Assert 关于 getParam
 - [x] Ignore
-- [x] Ignore Check 忽略路由检查
+- [x] RouteIgnore 忽略路由检查,(第三方扩展包中:写了注释,但是不一定绑定路由的用)
 
 ## Contributing
 
