@@ -33,7 +33,7 @@ class Routes
     static function checkAllRoute($testClass, $path = null)
     {
         //根据路由读取出来的
-        $todoList = Annotation::getApiTest([], false);
+        $todoList = Annotation::getApiTest(['whiteList' => $testClass->whiteList, 'blackList' => $testClass->blackList], false);
 
         //扫码文件夹.
         if (!$path)

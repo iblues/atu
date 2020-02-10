@@ -29,6 +29,8 @@ class Annotation
         $now = Arr::get($filter, 'now', 0);
         $name = Arr::get($filter, 'name', '');
         $tag = Arr::get($filter, 'tag', []);
+        $while = Arr::get($filter, 'whiteList', []);
+        $black = Arr::get($filter, 'blackList', []);
 
         $Cache = Cache::store('file');
 
@@ -47,21 +49,37 @@ class Annotation
         //初始化解析器
         $annotationReader = new AnnotationReader();
         //OpenApi部分不用去解析
-        $whitelist = [
+        $nameSpaceWhitelist = [
             "OA", 'SWA', 'ORM'
         ];
-        foreach ($whitelist as $v) {
+        foreach ($nameSpaceWhitelist as $v) {
             AnnotationReader::addGlobalIgnoredNamespace($v);
         }
         AnnotationRegistry::registerLoader('class_exists');
 
 
         foreach ($routes as $key => $route) {
+
             if (strpos($route['path'], '@')) {
                 list($class, $method) = explode('@', $route['path']);
                 if (!method_exists($class, $method)) {
                     continue;
                 }
+
+                $list = $while[strtolower($route['method'])] ?? null;
+
+                //如果不在白名单
+                if ($list && !self::urlCheckList($list, $route['url'])) {
+                    continue;
+                }
+
+                $list = $black[strtolower($route['method'])] ?? null;
+
+                //如果在黑名单
+                if ($list && self::urlCheckList($list, $route['url'])) {
+                    continue;
+                }
+
 
                 $fileName = (new ReflectionClass($class))->getFileName();
 
@@ -122,6 +140,14 @@ class Annotation
             }
         }
         return $return;
+    }
+
+    static function urlCheckList($list, $url)
+    {
+        foreach ($list as $p) {
+            return preg_match($p, $url);
+        }
+        return true;
     }
 
 

@@ -25,7 +25,7 @@ trait ApiTest
     protected function doNow()
     {
         $cache = $this->cache ?? true;
-        $todoList = Annotation::getApiTest(['now' => 1], $cache);
+        $todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
@@ -38,7 +38,7 @@ trait ApiTest
     protected function doAll()
     {
         $cache = $this->cache ?? true;
-        $todoList = Annotation::getApiTest([], $cache);
+        $todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
             $return = new ApiTestFactory($this, $todo);
         }
