@@ -77,6 +77,7 @@ class AtuTest extends TestCase
     {
         $this->AtuSetUp();
         $this->doAll();
+//        $this->doAll(['tag'=>'tag1']);  Look for @ATU\Tag("product"), @ATU\Tag(["product","order"]);
     }
 
     /**
@@ -88,6 +89,7 @@ class AtuTest extends TestCase
     {
         $this->AtuSetUp();
         $this->doNow();
+//        $this->doNow(['tag'=>'tag1']);  Look for @ATU\Tag("product");
     }
 
     /**
