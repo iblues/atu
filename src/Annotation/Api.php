@@ -28,6 +28,7 @@ class Api
     public $debug;
     public $now = 0;
     public $urlPath = null;
+    protected $tag;
     protected $httpMethod = null;
     protected $assert = [];
     protected $before = [];
@@ -46,6 +47,7 @@ class Api
         if (isset($data['method'])) {
             $this->httpMethod = $data['method'];
         }
+
         foreach ($data['value'] as $param) {
 
             if ($param instanceof Now) {
@@ -62,6 +64,8 @@ class Api
                 $this->assert[] = $param;
             } elseif ($param instanceof Before) {
                 $this->before[] = $param;
+            } elseif ($param instanceof Tag) {
+                $this->tag[] = $param;
             }
         }
 
@@ -180,5 +184,40 @@ class Api
              */
             $assert->handle($testClass, $request, $response);
         }
+    }
+
+    /**
+     * 检查是不是在tag中
+     * @param null $target
+     * @return bool
+     * @author Blues
+     */
+    public function inTag($target = null)
+    {
+        //如果没有目标tag
+        if (is_null($target)) {
+            return true;
+        }
+
+        $matchTag = $this->tag;
+        //有设置tag
+        if ($matchTag) {
+            $matchTag = $this->tag[0];
+            $return = array_intersect($target, $matchTag->getTag());
+            return count($return) > 0 ? true : false;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 是否声明了now
+     * @return int
+     * @author Blues
+     *
+     */
+    public function isNow()
+    {
+        return $this->now;
     }
 }

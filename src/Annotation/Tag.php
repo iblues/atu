@@ -14,5 +14,18 @@ namespace Iblues\AnnotationTestUnit\Annotation;
  */
 class Tag
 {
+    protected $tag = [];
 
+    function __construct($data)
+    {
+        if (!is_array($data['value'])) {
+            $data['value'] = [$data['value']];
+        }
+        $this->tag = $data['value'];
+    }
+
+    function getTag()
+    {
+        return $this->tag;
+    }
 }

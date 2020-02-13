@@ -22,7 +22,7 @@ class ApiTestFactory
     public $testClass = null;
     protected $request;
 
-    public function __construct($testClass, $param)
+    public function __construct($testClass, $param, $filter = null)
     {
         $this->testClass = $testClass;
         $this->url = $param['url'];
@@ -36,13 +36,13 @@ class ApiTestFactory
 //            ]);
         $this->methodPath = $param['path'];
         foreach ($param['annotation'] as $annotation) {
-            $this->walkAnnotation($annotation);
+            $this->walkAnnotation($annotation, $filter);
         }
 
 
     }
 
-    public function walkAnnotation(Api $annotation)
+    public function walkAnnotation(Api $annotation, $filter = [])
     {
 
         $testClass = clone($this->testClass);
@@ -53,8 +53,20 @@ class ApiTestFactory
 
         }
         try {
+            if (@$filter['now'] && !$annotation->isNow()) {
+                return;
+            }
+
+            //如果不满足tag,就跳过.
+            if (!$annotation->inTag(@$filter['tag'])) {
+                return;
+            }
+
+
+            //执行$before相关函数
             $annotation->handleBofore($testClass);
 
+            //计时
             $startTime = $this->msectime();
             $request = $annotation->handleRequest($testClass, $this->method, $this->url);
             $response = $annotation->handleResponse($testClass, $annotation, $request);

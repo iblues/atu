@@ -22,12 +22,12 @@ trait ApiTest
      * @author Blues
      *
      */
-    protected function doNow()
+    protected function doNow($tag = null)
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo);
+            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1]);
         }
     }
 
@@ -35,12 +35,12 @@ trait ApiTest
      * 测试带有@ATU\Api()注解的
      * @author Blues
      */
-    protected function doAll()
+    protected function doAll($tag = null)
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo);
+            $return = new ApiTestFactory($this, $todo, ['tag' => $tag]);
         }
     }
 
