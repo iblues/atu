@@ -100,6 +100,9 @@ php artisan vendor:publish --tag ATU
 @ATU\Api( path = /api/test/test/1 , method=POST)
 @ATU\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
 
+@ATU\Tag("tag1")  //用于标记分类.
+@ATU\Tag(["tag1","tag2"]) 
+
 @ATU\Request({1:21})   //json参数
 //@ATU\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
 
