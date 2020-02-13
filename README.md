@@ -291,7 +291,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] Assert
 - [x] Response
 - [x] GetParam
-- [ ] Name ,Tag
+- [x] Tag
 - [x] response 关于 GetRequest和GetParam
 - [x] request 关于 getParam
 - [x] before 关于 getParam
