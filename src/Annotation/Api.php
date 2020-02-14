@@ -48,6 +48,8 @@ class Api
             $this->httpMethod = $data['method'];
         }
 
+        $data['value'] = $data['value'] ?? [];
+
         foreach ($data['value'] as $param) {
 
             if ($param instanceof Now) {

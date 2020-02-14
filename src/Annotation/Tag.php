@@ -18,6 +18,9 @@ class Tag
 
     function __construct($data)
     {
+        if (!isset($data['value'])) {
+            return;
+        }
         if (!is_array($data['value'])) {
             $data['value'] = [$data['value']];
         }
