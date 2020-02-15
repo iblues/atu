@@ -77,19 +77,33 @@ class ApiTestFactory
 
             //登录验证参数,给curl用
             $loginUser = $testClass->loginUser;
-            if ($loginUser) {
-                $token = \Auth::guard($testClass->guard ?? 'api')->login($loginUser);
-                $request['headers']['Authorization'] = 'bearer ' . $token;
-            }
+
+            //处理Authorization
+            $request = $this->handelHeaderAuthorization($testClass, $request);
 
             //如果有@ATU\debug()
             if ($annotation->debug)
                 $this->debugInfo($annotation, $request, $startTime, $loginUser, 0);
 
         } catch (\Exception $e) {
+
+            //处理Authorization
+            $request = $this->handelHeaderAuthorization($testClass, $request ?? []);
+
             $this->debugInfo($annotation, $request ?? [], $startTime ?? 0, $loginUser ?? null, 1);
             throw $e;
         }
+    }
+
+    protected function handelHeaderAuthorization($testClass, $request)
+    {
+        $loginUser = $testClass->loginUser;
+        if ($loginUser) {
+            $token = \Auth::guard($testClass->guard ?? 'api')->login($loginUser);
+            $request['headers']['Authorization'] = 'bearer ' . $token;
+            return $request;
+        }
+        return $request;
     }
 
     protected function debugInfo($annotation, $request, $startTime = 0, $loginUser = null, $error = true)
@@ -109,7 +123,7 @@ class ApiTestFactory
             $this->dump('Login ID', $loginUser->id);
         }
         $this->dump('Request', json_encode($request['request'] ?? null, JSON_UNESCAPED_UNICODE));
-        $this->dump('CURL', $this->toCurlCommand($request));
+        $this->dump('CURL', $this->toCurlCommand($request, $loginUser));
         if ($startTime)
             $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
         foreach ($debugInfo as $key => $info) {
@@ -128,7 +142,7 @@ class ApiTestFactory
 
     }
 
-    protected function toCurlCommand($request)
+    protected function toCurlCommand($request, $loginUser)
     {
         $get = [];
         $request['method'] = $request['method'] ?? '';
