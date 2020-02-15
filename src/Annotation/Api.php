@@ -111,7 +111,8 @@ class Api
 
     protected function handelUrl($urlPath, $originUrl)
     {
-        if ($urlPath) {
+        if (!is_null($urlPath) && $urlPath !== '') {
+
             //如果不是数组的话. 先改成数组 统一处理
             if (!is_array($urlPath)) {
                 $urlPath = [$urlPath];
