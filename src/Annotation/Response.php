@@ -101,7 +101,7 @@ class Response
             //创建日志
 
             File::clearFile(1);
-            $file = File::saveFile('response', $response);
+            $file = File::saveFile('response', $response, true);
             $this->debugInfo['Response File'] = 'file://' . $file;
 
             $vl = json_encode($array, JSON_UNESCAPED_UNICODE);

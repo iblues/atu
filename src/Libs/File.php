@@ -42,12 +42,18 @@ class File
         }
     }
 
-    static function saveFile($file, $data)
+    static function saveFile($file, $data, $toJson = false)
     {
         self::mkdir();
         $filePath = storage_path(self::DIRNAME);
-        $file = $filePath . '/' . $file . '-' . self::msectime() . '.json';
-        $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if ($toJson)
+            $ext = '.json';
+        else
+            $ext = '.txt';
+        $file = $filePath . '/' . $file . '-' . self::msectime() . $ext;
+        if ($toJson) {
+            $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        }
         file_put_contents($file, $data);
         return $file;
     }

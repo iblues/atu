@@ -96,6 +96,7 @@ trait ApiTest
     {
         $isolateApp = $this->isolateApp ?? true;
         if ($isolateApp) {
+            $this->callBeforeApplicationDestroyedCallbacks();
             $this->app = $this->createApplication();
             $this->setUp();
         }
