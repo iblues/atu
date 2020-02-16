@@ -15,7 +15,6 @@ class AtuTest extends TestCase
     /**
      * DatabaseTransactions自动开启事务. 这样不会写入数据库. 但是注意!事务外的应用读不起到数据库的写入值.
      * PS: 如果开启事务后仍有数据写入.那么说明在代码中你使用了手动事务并且\DB::beginTransaion()比\DB::commit()少了一个.导致事务拦截失效
-     * 解决办法.在parent::setUp();后面多写几个\DB::beginTransaion(). 让事务始终比commit多.
      */
     use ApiTest, DatabaseTransactions;
 
