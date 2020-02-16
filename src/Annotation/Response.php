@@ -85,14 +85,19 @@ class Response
     {
         $response = $responseObj->getData();
         //如果是500报错
-        if ($responseObj->getStatusCode() == 500) {
-            if (property_exists($response, 'message')) {
-                $this->debugInfo['ErrorMsg'] = $response->message;
+        try {
+            if ($responseObj->getStatusCode() == 500) {
+                if (property_exists($response, 'message')) {
+                    $this->debugInfo['ErrorMsg'] = $response->message;
+                }
+                if (property_exists($response, 'data') && property_exists($response->data, 'message')) {
+                    $this->debugInfo['ErrorMsg'] = $response->data->message;
+                }
             }
-            if (property_exists($response, 'data') && property_exists($response->data, 'message')) {
-                $this->debugInfo['ErrorMsg'] = $response->data->message;
-            }
+        } catch (\Exception $e) {
+
         }
+
 
         //转成array
         $array = json_decode(json_encode($response), 1);
