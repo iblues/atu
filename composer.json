@@ -15,7 +15,7 @@
     },
     "require": {
         "php": ">=7.0",
-        "doctrine/annotations": "^1.*"
+        "doctrine/annotations": "^1.8"
     },
     "extra": {
         "laravel": {
