@@ -23,7 +23,12 @@ $ composer require iblues/annotation-test-unit -vvv
 ```
 2.配置好单元测试,教程:
 <https://www.w3cschool.cn/intellij_idea_doc/using_phpunit_framework.html>
-PS:有效的设置测试环境可以避免脏正式数据.
+PS:有效的设置测试环境 phpunit.xml 其中:
+ 
+    a.SESSION_DRIVER会设置为array, 避免脏环境.
+    b.QUEUE_DRIVER自动覆盖为sync, 方便测试和发现问题.
+    c.CACHE_DRIVER会设置为array, 避免脏环境.
+    d.也可以单独设置测试专用数据库
 
 3.找一个控制器.增加注解.
 
