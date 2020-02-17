@@ -5,6 +5,7 @@ namespace Iblues\AnnotationTestUnit\Annotation;
 use Iblues\AnnotationTestUnit\Annotation\Request;
 use Iblues\AnnotationTestUnit\Annotation\Response;
 use Iblues\AnnotationTestUnit\Annotation\GetParam;
+use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
 /**
  * 标记这是一个Api测试,一个控制器可以有多个
@@ -17,6 +18,7 @@ use Iblues\AnnotationTestUnit\Annotation\GetParam;
  */
 class Api
 {
+    use ParseValue;
     /**
      * @var \Iblues\AnnotationTestUnit\Annotation\Response;
      */
@@ -41,6 +43,7 @@ class Api
 
     public function __construct($data)
     {
+
         if (isset($data['path'])) {
             $this->urlPath = $data['path'];
         }
@@ -48,7 +51,10 @@ class Api
             $this->httpMethod = $data['method'];
         }
 
+
         $data['value'] = $data['value'] ?? [];
+        //如果value只有一个参数 转成数组
+        $data['value'] = is_array($data['value']) ? $data['value'] : [$data['value']];
 
         foreach ($data['value'] as $param) {
 

@@ -22,10 +22,12 @@ class AtuTest extends TestCase
      * 是否深度隔离各个$app. 开启:降低性能,setUp会执行多次. 关闭:可能造成未知错误.
      */
     protected $isolateApp = true;
+
     /**
      * 是否启用缓存,加速解析.
+     * 系统会根据文件最后修改时间自动刷新缓存, 但是也可能判断不完整. 可以根据实际情况判断
      */
-    protected $cache = true;
+    protected $cache = false;
 
     /**
      * 用户模型,用于登录使用.
