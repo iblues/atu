@@ -140,6 +140,9 @@ class ApiTestFactory
         else
             Console::info(' ----------------------------------------- END -------------------------------------------');
 
+        //即时输出到命令行
+        ob_flush();
+
     }
 
     protected function toCurlCommand($request, $loginUser)
