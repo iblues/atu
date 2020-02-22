@@ -84,7 +84,7 @@ php artisan vendor:publish --tag ATU
  https://plugins.jetbrains.com/plugin/index?xmlId=de.espend.idea.php.annotation
  
  2.设置插件
- use Alisa:
+ language & framew -> php ->annotations ->Use Alias 新增
  Iblues\AnnotationTestUnit\Annotation  as  ATU
  
  
