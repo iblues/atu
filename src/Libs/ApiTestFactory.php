@@ -30,6 +30,9 @@ class ApiTestFactory
         $this->fileLine = $methodLine = 'file://' . $param['classPath'] . ':' . $param['methodStartLine'];
         $this->debug = $filter['debug'] ?? false;
         $this->methodPath = $param['path'];
+        Console::info('Total ATU: ' . count($param['annotation']));
+        ob_flush();
+
         foreach ($param['annotation'] as $annotation) {
             $this->walkAnnotation($annotation, $filter);
         }
