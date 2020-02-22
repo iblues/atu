@@ -31,6 +31,7 @@ class Api
     public $now = 0;
     public $urlPath = null;
     protected $tag;
+    public $title = "";
     protected $httpMethod = null;
     protected $assert = [];
     protected $before = [];
@@ -44,6 +45,7 @@ class Api
     public function __construct($data)
     {
 
+
         if (isset($data['path'])) {
             $this->urlPath = $data['path'];
         }
@@ -55,7 +57,7 @@ class Api
         $data['value'] = $data['value'] ?? [];
         //如果value只有一个参数 转成数组
         $data['value'] = is_array($data['value']) ? $data['value'] : [$data['value']];
-
+        $this->title = $data['title'] ?? '';
         foreach ($data['value'] as $param) {
 
             if ($param instanceof Now) {

@@ -55,6 +55,12 @@ class AtuTest extends TestCase
     public $blackList = ['get' => [], 'put' => [], 'delete' => [], 'post' => []];
 //    protected $blackList = ['get' => ['/api\/admin\/.*?/i'], 'put'=>['/api\/[^((?!admin).)*$]/i', 'delete'=>'', 'post'=>''];
 
+    /**
+     * 是否开启全局debug模式.相当于给每个都加了@DEBUG
+     * @var bool
+     */
+    protected $debug = false;
+
 
     /**
      * setUp会执行多次, 如果只想执行一次,请用AtuSetUp代替

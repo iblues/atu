@@ -27,7 +27,7 @@ trait ApiTest
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1]);
+            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1, 'debug' => $this->debug ?? false]);
         }
     }
 
@@ -40,7 +40,7 @@ trait ApiTest
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo, ['tag' => $tag]);
+            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'debug' => $this->debug ?? false]);
         }
     }
 

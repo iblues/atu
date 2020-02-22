@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class ApiTestFactory
 {
 
-    public $debug = 1;
+    public $debug = false;
 
     public $url = '';
     public $method = 'GET';
@@ -28,12 +28,7 @@ class ApiTestFactory
         $this->url = $param['url'];
         $this->method = $param['httpMethod'];
         $this->fileLine = $methodLine = 'file://' . $param['classPath'] . ':' . $param['methodStartLine'];
-//        $response = $this->json('GET', '/api/admin/admin/nav');
-//        $response
-//            ->assertStatus(200)
-//            ->assertJson([
-//                'code' => true,
-//            ]);
+        $this->debug = $filter['debug'] ?? false;
         $this->methodPath = $param['path'];
         foreach ($param['annotation'] as $annotation) {
             $this->walkAnnotation($annotation, $filter);
@@ -82,7 +77,7 @@ class ApiTestFactory
             $request = $this->handelHeaderAuthorization($testClass, $request);
 
             //如果有@ATU\debug()
-            if ($annotation->debug)
+            if ($annotation->debug || $this->debug)
                 $this->debugInfo($annotation, $request, $startTime, $loginUser, 0);
 
         } catch (\Exception $e) {
@@ -117,6 +112,9 @@ class ApiTestFactory
             Console::error(' ----------------------------------------- DEBUG -----------------------------------------');
         else
             Console::info(' ----------------------------------------- INFO ------------------------------------------');
+        if ($annotation->title) {
+            $this->dump('Title', $annotation->title);
+        }
         $this->dump('Code', "{$this->methodPath} ( {$this->fileLine} )");
         $this->dump('URL', $this->method . '  -  ' . @$request['url'] ?? '');
         if ($loginUser) {
