@@ -164,6 +164,7 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
 ```
 
 @ATU\Api(
+  title="something",
   @ATU\Now(),
   @ATU\Before(/test/test::function),
   @ATU\Request(),
@@ -303,6 +304,8 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [x] Assert 关于 getParam
 - [x] Ignore
 - [x] RouteIgnore 忽略路由检查,(第三方扩展包中:写了注释,但是不一定绑定路由的用)
+- [x] title
+- [x] 全局debug (在测试文件中启动)
 
 ## Contributing
 
