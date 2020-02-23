@@ -29,7 +29,7 @@ class Api
     public $request;
     public $debug;
     public $now = 0;
-    public $urlPath = null;
+    public $path = null;
     protected $tag;
     public $title = "";
     protected $httpMethod = null;
@@ -47,7 +47,7 @@ class Api
 
 
         if (isset($data['path'])) {
-            $this->urlPath = $data['path'];
+            $this->path = $data['path'];
         }
         if (isset($data['method'])) {
             $this->httpMethod = $data['method'];
@@ -163,7 +163,7 @@ class Api
         //处理method,url  put:11.com
         $method = $this->httpMethod ?? $method;
 
-        $url = $this->handelUrl($this->urlPath, $url);
+        $url = $this->handelUrl($this->path, $url);
 //        $this->urlPath= $url;
 
         $this->login->handel($testClass);

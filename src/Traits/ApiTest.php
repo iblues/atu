@@ -3,6 +3,7 @@
 namespace Iblues\AnnotationTestUnit\Traits;
 
 use Iblues\AnnotationTestUnit\Libs\Annotation;
+use Iblues\AnnotationTestUnit\Libs\Console;
 use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
 use Iblues\AnnotationTestUnit\Libs\Routes;
@@ -26,9 +27,13 @@ trait ApiTest
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
+        $number = 0;
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1, 'debug' => $this->debug ?? false]);
+            $ATU = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1, 'debug' => $this->debug ?? false]);
+            $number += $ATU->getNumber();
         }
+        Console::info('Total ATU: ' . $number);
+        ob_flush();
     }
 
     /**
@@ -39,9 +44,13 @@ trait ApiTest
     {
         $cache = $this->cache ?? true;
         $todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
+        $number = 0;
         foreach ($todoList as $todo) {
-            $return = new ApiTestFactory($this, $todo, ['tag' => $tag, 'debug' => $this->debug ?? false]);
+            $ATU = new ApiTestFactory($this, $todo, ['tag' => $tag, 'debug' => $this->debug ?? false]);
+            $number += $ATU->getNumber();
         }
+        Console::info('Total ATU: ' . $number);
+        ob_flush();
     }
 
 
@@ -88,20 +97,6 @@ trait ApiTest
         return $this->actingAs($user, $driver);
     }
 
-    /**
-     * 避免变量污染,尽可能让每一次测试都独立. 目前发现的是登录会影响
-     * @author Blues
-     */
-    public function __clone()
-    {
-        $isolateApp = $this->isolateApp ?? true;
-        if ($isolateApp) {
-            $this->refreshApplication();
-//            $this->callBeforeApplicationDestroyedCallbacks();
-//            $this->app = $this->createApplication();
-//            $this->setUp();
-        }
-    }
 
     /**
      * 设置变量 通过getParam()调用
@@ -156,6 +151,22 @@ trait ApiTest
     {
         return bcrypt('secret');
     }
+
+
+    /**
+     * 刷新app状态. 以及测试的回退. 隔离测试变量
+     * @author Blues
+     *
+     */
+    public function refresh()
+    {
+        $isolateApp = $this->isolateApp ?? true;
+        if ($isolateApp) {
+            $this->tearDown();
+            $this->setUp();
+        }
+    }
+
 
 }
 

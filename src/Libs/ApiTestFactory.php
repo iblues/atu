@@ -20,6 +20,7 @@ class ApiTestFactory
     public $fileLine = null;
     public $methodPath = null;
     public $testClass = null;
+    protected $number = 0;//Atu计数
     protected $request;
 
     public function __construct($testClass, $param, $filter = null)
@@ -30,20 +31,15 @@ class ApiTestFactory
         $this->fileLine = $methodLine = 'file://' . $param['classPath'] . ':' . $param['methodStartLine'];
         $this->debug = $filter['debug'] ?? false;
         $this->methodPath = $param['path'];
-        Console::info('Total ATU: ' . count($param['annotation']));
-        ob_flush();
 
         foreach ($param['annotation'] as $annotation) {
             $this->walkAnnotation($annotation, $filter);
         }
-
-
     }
 
     public function walkAnnotation(Api $annotation, $filter = [])
     {
-
-        $testClass = clone($this->testClass);
+        $testClass = $this->testClass;
 
         if ($annotation->now) {
             //如果是开启了当前测试. 提醒下哪些开了的 方便随时关闭
@@ -60,6 +56,9 @@ class ApiTestFactory
                 return;
             }
 
+            $this->number++;
+
+            $testClass->refresh();
 
             //执行$before相关函数
             $annotation->handleBofore($testClass);
@@ -191,5 +190,15 @@ class ApiTestFactory
         list($msec, $sec) = explode(' ', microtime());
         $msectime = (float)sprintf('%.0f', (floatval($msec) + floatval($sec)) * 1000);
         return $msectime;
+    }
+
+    /**
+     * 返回执行了多少个ATU;
+     * @author Blues
+     *
+     */
+    public function getNumber()
+    {
+        return $this->number;
     }
 }
