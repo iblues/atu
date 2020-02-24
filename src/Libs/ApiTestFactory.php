@@ -127,8 +127,25 @@ class ApiTestFactory
         if ($startTime)
             $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
         foreach ($debugInfo as $key => $info) {
+
             if ($error && in_array($key, ['ErrorMsg', 'Response'])) {
                 $this->dump($key, $info, 1);
+            } else if ($key == 'trace') {
+                Console::error(' ----------------------------------------- Error Trace -------------------------------------------');
+                Console::error("file://{$info['file']}:{$info['line']}");
+                if (isset($info['trace'])) {
+                    foreach ($info['trace'] as $trace) {
+                        $class = '';
+                        $file = '';
+                        if (isset($trace['file'])) {
+                            $file = "file://{$trace['file']}:{$trace['line']}";
+                        }
+                        if (isset($trace['class'])) {
+                            $class = $trace['class'] . ' ->';
+                        }
+                        Console::error("{$file}  ({$class}{$trace['function']})");
+                    }
+                }
             } else {
                 $this->dump($key, $info);
             }

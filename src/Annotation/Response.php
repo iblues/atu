@@ -84,6 +84,11 @@ class Response
     public function dumpResponse($responseObj)
     {
         $response = $responseObj->getData();
+
+
+        //转成array
+        $array = json_decode(json_encode($response), 1);
+
         //如果是500报错
         try {
             if ($responseObj->getStatusCode() == 500) {
@@ -93,14 +98,15 @@ class Response
                 if (property_exists($response, 'data') && property_exists($response->data, 'message')) {
                     $this->debugInfo['ErrorMsg'] = $response->data->message;
                 }
+                if (property_exists($response, 'data')) {
+                    $this->debugInfo['trace'] = $array['data'];
+                }
+
             }
         } catch (\Exception $e) {
 
         }
 
-
-        //转成array
-        $array = json_decode(json_encode($response), 1);
         //如果层级太多了.大于16个. 就记录到日志中去
         if (count($array, 1) > 2) {
             //创建日志
