@@ -13,6 +13,16 @@ use phpDocumentor\Reflection\Types\Object_;
  * @author Blues
  * Class Assert
  * @package Iblues\AnnotationTestUnit
+ *
+ * 在response中的支持预定义断言 参考 https://learnku.com/docs/laravel/6.x/http-tests/5183#assert-cookie
+ * 在Api中支持超的函数
+ * https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
+ * 以及数据库相关.
+ * assertDatabaseHas($table, array $data);    断言数据库表中包含给定的数据。
+ * assertDatabaseMissing($table, array $data);    断言数据库中的表不包含给定数据。
+ * assertSoftDeleted($table, array $data);    断言给定记录已被软删除。
+ * 也可以在test中自行增加自定义函数.
+ *
  */
 class Assert
 {

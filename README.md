@@ -126,12 +126,32 @@ php artisan vendor:publish --tag ATU
 
 $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
 
+
+
+@ATU\Before("doSomeThing",{"tesst"});
+
 //可以传入@Response和@request 会处理成对应值返回.
 @ATU\Assert("assertDatabaseHas",{"user",
     { "title" : @ATU\Response('data.title") }
 }),
+@ATU\Assert("assertDatabaseHas",{"user",
+    { "title" :{"id":1} }
+}),
 
-@ATU\Before("doSomeThing",{"tesst"});
+关于@ATU\Assert
+在Api中支持超的函数
+https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
+
+数据库相关.
+assertDatabaseHas($table, array $data);    断言数据库表中包含给定的数据。
+assertDatabaseMissing($table, array $data);    断言数据库中的表不包含给定数据。
+assertSoftDeleted($table, array $data);    断言给定记录已被软删除。
+
+phpunit: 
+https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
+
+也可以在类中自行增加自定义函数.
+
 
 ```
 ### DEMO

@@ -23,5 +23,7 @@
                 "Iblues\\AnnotationTestUnit\\ServiceProvider"
             ]
         }
+    },
+    "require-dev": {
     }
 }
