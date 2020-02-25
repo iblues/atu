@@ -238,13 +238,12 @@ https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
 
 
 @ATU\Api(
-  @ATU\Now(),
-  @ATU\Before("createTest",{"param":"not use"}),
-  @ATU\Request({"title":"测试","content":@ATU\GetParam("test.title")}),
+  @ATU\Before("create",{TestTest::class,{"title":"测试22"} }),
+  @ATU\Request({"title":@ATU\GetParam("TestTest.title"),"content":@ATU\GetParam("TestTest.title"),"user_id":"123"}),
   @ATU\Response({
      "data":{"id":true,"title":@ATU\GetRequest("title")}
     },
-    @ATU\Assert("assertSee",{"测试"}),
+    @ATU\Assert("assertSee",{@ATU\GetParam("TestTest.title")}),
     @ATU\Assert("assertSee",{@ATU\GetRequest("title")}),
     @ATU\Assert("assertJson", {{"data":@ATU\GetRequest}} ),
     @ATU\Assert("assertOk"),

@@ -167,6 +167,31 @@ trait ApiTest
         }
     }
 
+    /**
+     * 测试数据创建器
+     * @param $model
+     * @param $data
+     * @throws \Exception
+     * @author Blues
+     */
+    public function create($model, $data)
+    {
+        if (!class_exists($model)) {
+            throw  new \Exception("$model not exist, Please sure use {$model} in controller file");
+        }
+        $model = new $model();
+        $key = $model->getKeyName();
+        //有主键
+        if (key_exists($key, $data)) {
+            $model::updateOrInsert([$key => $data[$key]], $data);
+            $result = $model::where($key, $data[$key])->first();
+        } else {
+            $result = $model::create($data);
+        }
+        $name = basename(str_ireplace('\\', '/', get_class($model)));
+        $this->setParam($name, $result->toArray());
+    }
+
 
 }
 
