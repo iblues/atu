@@ -186,12 +186,11 @@ https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
 @ATU\Api(
   title="something",
   @ATU\Now(),
-  @ATU\Before(/test/test::function),
+  @ATU\Before("createUser"),
   @ATU\Request(),
   @ATU\Response(200,{
    "code":true,
    "data":{{"id":true,"user":true}},
-    @ATU\Now(),@ATU\Debug()
   }),
   @ATU\Debug()
 )
