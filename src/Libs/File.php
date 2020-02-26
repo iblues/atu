@@ -42,14 +42,10 @@ class File
         }
     }
 
-    static function saveFile($file, $data, $toJson = false)
+    static function saveFile($file, $data, $toJson = false, $ext = '.json')
     {
         self::mkdir();
         $filePath = storage_path(self::DIRNAME);
-        if ($toJson)
-            $ext = '.json';
-        else
-            $ext = '.txt';
         $file = $filePath . '/' . $file . '-' . self::msectime() . $ext;
         if ($toJson) {
             $data = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);

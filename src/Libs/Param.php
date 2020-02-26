@@ -25,7 +25,15 @@ class Param
             $cache[$key] = $data;
             return true;
         } else {
-            return $key ? Arr::get($cache, $key) : $cache;
+            if ($key) {
+                $return = Arr::get($cache, $key, null);
+                if (is_null($return)) {
+                    throw new \Exception("Param : {$key} not exist");
+                }
+                return $return;
+            } else {
+                return $cache;
+            }
         }
 
     }

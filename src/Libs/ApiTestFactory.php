@@ -176,7 +176,7 @@ class ApiTestFactory
         $headers['content-type'] = 'application/javascript';
         $phpInput = [];
         $curl = (new Php2Curl($get, $post, [], $server, $headers, $phpInput))->doAll();
-        return 'file://' . File::saveFile('CURL', $curl);
+        return 'file://' . File::saveFile('CURL', $curl, false, '.sh');
     }
 
     protected function dump($key, $val, $error = false)
