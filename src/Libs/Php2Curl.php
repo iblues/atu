@@ -42,7 +42,7 @@ class Php2Curl
     // not the full list, just special cases from Postman app
     const CONTENT_TYPE_FORM_DATA = 'multipart/form-data';
     const CONTENT_TYPE_FORM_URL_ENCODED = 'x-www-form-urlencoded';
-    const CONTENT_TYPE_JSON = 'application/javascript';
+    const CONTENT_TYPE_JSON = 'application/json';
     const CONTENT_TYPE_UNKNOWN = 'unknown';
 
     public function __construct($get = null, $post = null, $request = null, $server = null, $headers = null, $phpInput = null)

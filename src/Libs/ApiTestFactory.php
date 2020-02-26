@@ -173,7 +173,7 @@ class ApiTestFactory
         }
         $server = ['REQUEST_METHOD' => $request['method'], 'SERVER_NAME' => $_ENV['APP_URL'], 'REQUEST_URI' => $request['url']];
         $headers = $request['headers'] ?? [];
-        $headers['content-type'] = 'application/javascript';
+        $headers['content-type'] = 'application/json';
         $phpInput = [];
         $curl = (new Php2Curl($get, $post, [], $server, $headers, $phpInput))->doAll();
         return 'file://' . File::saveFile('CURL', $curl, false, '.sh');
