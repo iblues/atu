@@ -30,9 +30,10 @@ class Api
     public $debug;
     public $now = 0;
     public $path = null;
+    public $author = '';
     protected $tag;
     public $title = "";
-    protected $httpMethod = null;
+    protected $method = null;
     protected $assert = [];
     protected $before = [];
     protected $fullRequest = [];
@@ -50,7 +51,7 @@ class Api
             $this->path = $data['path'];
         }
         if (isset($data['method'])) {
-            $this->httpMethod = $data['method'];
+            $this->method = $data['method'];
         }
 
 
@@ -161,7 +162,7 @@ class Api
     public function handleRequest($testClass, $method = 'GET', $url)
     {
         //处理method,url  put:11.com
-        $method = $this->httpMethod ?? $method;
+        $method = $this->method ?? $method;
 
         $url = $this->handelUrl($this->path, $url);
 //        $this->urlPath= $url;

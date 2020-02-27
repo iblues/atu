@@ -11,11 +11,11 @@ class Param
 
     /**
      *
-     * @param $key
+     * @param string $key
      * @param $data = null 是读取
      * @return mixed
+     * @throws \Exception
      * @author Blues
-     *
      */
     static public function param($key = '', $data = null)
     {

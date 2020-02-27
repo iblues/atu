@@ -92,18 +92,27 @@ php artisan vendor:publish --tag ATU
 
 ### 文档说明
 ```
-注意逗号!
+注意事项:
+受第三方扩展限制
 
+1.必须逗号分隔, 否则报错 got '@' at position
+
+2.类似以下数组[1,2,3]需要改写为{1,2,3}
+
+3.字符串必须适应双引号. 如{"title":1} , 否则报错 got ''' 
+
+
+
+
+@ATU\Api (代表是api的测试)
+@ATU\Api( path = http://baidu.com , method=GET , title="测试" , author="xx")
+@ATU\Api( path = /api/test/test/1 , method=POST)
+@ATU\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
+@ATU\Api( path = [1,2,3]) (会依次匹配: /api/{x1}/{x2}/{x3} )
 
 @ATU\Now //代表执行的测试要执行这个.避免全部执行很慢. 在Test\Api中
 
-//@ATUDebug //返回的内容都打印出来
-//@ATUTransaction true //事务默认就是开启.可以不设置
-
-@ATU\Api (代表是api的测试)
-@ATU\Api( path = http://baidu.com , method=GET)
-@ATU\Api( path = /api/test/test/1 , method=POST)
-@ATU\Api( path = 1) (会自动寻找匹配的路由 等于 /api/test/test/1)
+@ATU\Debug //返回的内容都打印出来
 
 @ATU\Tag("tag1")  //用于标记分类.
 @ATU\Tag(["tag1","tag2"]) 
@@ -111,24 +120,23 @@ php artisan vendor:publish --tag ATU
 @ATU\Request({1:21})   //json参数
 //@ATU\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
 
-//@ATUBefore(/test/test/TestBoot()); //优先调其他的, 未完成
-//@ATUBefore(@ATU('expressOrder')); //会将请求和返回的结果存下来 再议
-
-@ATU\Response( 200 )  //默认就是200
-@ATU\Response({
-  "data":true,
-  "data":{
-    {"id":true}
-   },
-   @ATU\TestAssert(...), //等等其他的断言 未完成. 
-}),
+@ATUBefore({test/test::class,"call"},{"param1"}); //调对应类的方法
+@ATUBefore("call",{"param1"}); //调test类本身的方法. 可以在方法中调用setParam存储. 再@GetPrarm()调用
+@ATU\Before("doSomeThing");
 
 
 $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
 
+@ATU\Response( 413 )  //默认就是200
+@ATU\Response( {"id":1} ) 
+@ATU\Response(200,{
+  "data":true,
+  "data":{
+    {"id":true}
+   },
+   @ATU\Assert("assertJsonMissingExact",{"tt":1}), //等于response进行断言. 参考 https://learnku.com/docs/laravel/6.x/http-tests/5183#available-assertions
+}),
 
-
-@ATU\Before("doSomeThing",{"tesst"});
 
 //可以传入@Response和@request 会处理成对应值返回.
 @ATU\Assert("assertDatabaseHas",{"user",
@@ -146,9 +154,6 @@ https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
 assertDatabaseHas($table, array $data);    断言数据库表中包含给定的数据。
 assertDatabaseMissing($table, array $data);    断言数据库中的表不包含给定数据。
 assertSoftDeleted($table, array $data);    断言给定记录已被软删除。
-
-phpunit: 
-https://phpunit.readthedocs.io/zh_CN/latest/assertions.html#assertarrayhaskey
 
 也可以在类中自行增加自定义函数.
 

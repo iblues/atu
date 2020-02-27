@@ -17,23 +17,31 @@ class Before
 
     protected $funcName;
     protected $param;
+    protected $class = null;
 
     function __construct($data)
     {
         $value = $this->parseConstructValue($data);
-        $this->funcName = $value[0];
-        $this->param = $value[1] ?? [];
-//        call_user_func_array
+        if (class_exists($value[0])) {
+            $this->class = $value[0];
+            $this->funcName = $value[1];
+            $this->param = $value[2] ?? [];
+        } else {
+            $this->class = null;
+            $this->funcName = $value[0];
+            $this->param = $value[1] ?? [];
+        }
     }
 
 
     function handle($testClass)
     {
-        if (method_exists($testClass, 'callProtectedFunction')) {
+        $class = $this->class ?? $testClass;
+        if (method_exists($class, 'callProtectedFunction')) {
             $param = ['func' => $this->funcName, 'param' => $this->param];
-            return call_user_func_array([$testClass, 'callProtectedFunction'], $param);
+            return call_user_func_array([$class, 'callProtectedFunction'], $param);
         } else {
-            return call_user_func_array([$testClass, $this->funcName], $this->param);
+            return call_user_func_array([$class, $this->funcName], $this->param);
         }
     }
 
