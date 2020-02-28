@@ -113,7 +113,7 @@ class Php2Curl
                     return self::CONTENT_TYPE_FORM_URL_ENCODED;
                 }
 
-                if (stripos($value, 'application/javascript') !== false) {
+                if (stripos($value, 'application/json') !== false) {
                     return self::CONTENT_TYPE_JSON;
                 }
 
