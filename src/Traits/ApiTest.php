@@ -168,13 +168,14 @@ trait ApiTest
     }
 
     /**
-     * 测试数据创建器
-     * @param $model
-     * @param $data
+     * 测试数据创建器 updateOrCreate
+     * @param string $model
+     * @param array $data
+     * @param null|array $where
      * @throws \Exception
      * @author Blues
      */
-    public function create($model, $data)
+    public function create(string $model, array $data, $where = null)
     {
         if (!class_exists($model)) {
             throw  new \Exception("$model not exist, Please sure use {$model} in controller file");
@@ -186,12 +187,32 @@ trait ApiTest
             $model::updateOrInsert([$key => $data[$key]], $data);
             $result = $model::where($key, $data[$key])->first();
         } else {
-            $result = $model::create($data);
+            if ($where) {
+                $result = $model::updateOrCreate($where, $data);
+            } else {
+                $result = $model::create($data);
+            }
         }
         $name = basename(str_ireplace('\\', '/', get_class($model)));
         $this->setParam($name, $result->toArray());
     }
 
+    /**
+     * 删除指定数据
+     * @param string $model
+     * @param array $where
+     * @throws \Exception
+     * @author Blues
+     *
+     */
+    public function delete(string $model, array $where)
+    {
+        if (!class_exists($model)) {
+            throw  new \Exception("$model not exist, Please sure use {$model} in controller file");
+        }
+        $model = new $model();
+        $model->where($where)->delete();
+    }
 
 }
 
