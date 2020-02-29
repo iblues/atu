@@ -129,6 +129,7 @@ $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的
 
 @ATU\Response( 413 )  //默认就是200
 @ATU\Response( {"id":1} ) 
+@ATU\Response( {"id":"/^测试.*?/i"} )  //支持正则表达式
 @ATU\Response(200,{
   "data":true,
   "data":{
@@ -314,7 +315,7 @@ A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
 - [ ] Request 文件上传,随机种子
 - [x] Response
 - [x] getResponse
-- [ ] Response,正则和高级规则支持
+- [x] Response,正则支持
 - [x] Before
 - [x] Degbug
 - [x] Assert

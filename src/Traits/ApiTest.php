@@ -8,6 +8,7 @@ use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
 use Iblues\AnnotationTestUnit\Libs\Routes;
 use Tests\Feature\AnnotationTest;
+use Iblues\AnnotationTestUnit\Assert\AssertAdvJson;
 
 trait ApiTest
 {
@@ -213,6 +214,12 @@ trait ApiTest
         $model = new $model();
         $model->where($where)->delete();
     }
+
+    public function assertAdvJson(array $data, $strict = false)
+    {
+        return AssertAdvJson::assert($data, $this->decodeResponseJson(), $strict, $this->assertJsonMessage($data));
+    }
+
 
 }
 

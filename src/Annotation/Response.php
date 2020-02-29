@@ -8,6 +8,7 @@ use Illuminate\Support\Arr;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
+
 /**
  * 检查返回的断言. 需要返回json的. data.id=true,data.title="正则表达式*",
  * @link https://github.com/iblues/annotation-test-unit
@@ -143,7 +144,7 @@ class Response
             if ($this->expectResponseJson) {
                 foreach ($this->expectResponseJson as $json) {
                     array_walk($json, [$this, 'walkParam']);
-                    $this->response->assertJson($json);
+                    $this->response->assertAdvJson($json);
                 }
             }
 
