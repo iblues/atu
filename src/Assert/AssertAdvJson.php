@@ -2,7 +2,7 @@
 
 namespace Iblues\AnnotationTestUnit\Assert;
 
-use Illuminate\Foundation\Testing\Assert as PHPUnit;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
@@ -44,7 +44,7 @@ class AssertAdvJson extends Constraint
         }
         $constraint = new AssertAdvJson($subset, $checkForObjectIdentity);
 
-        PHPUnit::assertThat($array, $constraint, $message);
+        Assert::assertThat($array, $constraint, $message);
     }
 
     public function __construct(iterable $subset, bool $strict = false)
