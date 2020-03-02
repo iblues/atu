@@ -32,6 +32,7 @@ class Api
     public $path = null;
     public $author = '';
     protected $tag;
+    protected $ignore = false;
     public $title = "";
     protected $method = null;
     protected $assert = [];
@@ -78,6 +79,8 @@ class Api
                 $this->before[] = $param;
             } elseif ($param instanceof Tag) {
                 $this->tag[] = $param;
+            } elseif ($param instanceof Ignore) {
+                $this->ignore = true;
             }
         }
 
@@ -240,6 +243,11 @@ class Api
     public function isNow()
     {
         return $this->now;
+    }
+
+    public function isIgnore()
+    {
+        return $this->ignore;
     }
 
     /**

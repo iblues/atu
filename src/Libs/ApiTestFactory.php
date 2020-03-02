@@ -47,7 +47,14 @@ class ApiTestFactory
 
         }
         try {
+            //@ATU\now
             if (@$filter['now'] && !$annotation->isNow()) {
+                return;
+            }
+
+            //@ATU\ignore
+            if ($annotation->isIgnore()) {
+                dump('@ATU\Ignore enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
                 return;
             }
 

@@ -107,11 +107,11 @@ class Annotation
                             continue;
                         }
 
-                        //忽略的
-                        if (stripos($doc, '@ATU\ignore') !== false) {
-                            //忽略的就不执行了
-                            continue;
-                        }
+//                        //忽略的
+//                        if (stripos($doc, '@ATU\ignore') !== false) {
+//                            //忽略的就不执行了
+//                            continue;
+//                        }
 
 
                         //有Test\Now的才执行
