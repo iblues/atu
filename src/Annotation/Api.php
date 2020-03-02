@@ -37,6 +37,7 @@ class Api
     protected $assert = [];
     protected $before = [];
     protected $fullRequest = [];
+    protected $dataBaseLog = [];
     /**
      * @var Login
      */
@@ -169,7 +170,15 @@ class Api
 
         $this->login->handel($testClass);
 
+        //清空之前的记录
+        \DB::flushQueryLog();
+        //开始记录sql预计
+        \DB::enableQueryLog();
         $response = $this->request->handel($testClass, $method, $url);
+
+        //sql捕捉.
+        $this->dataBaseLog = \DB::getQueryLog();
+
         $this->response->setRespone($response);
         $fullRequest = ['method' => $method, 'url' => $url, 'request' => $this->request->getJsonRequest()];
         $this->fullRequest = $fullRequest;
@@ -231,5 +240,29 @@ class Api
     public function isNow()
     {
         return $this->now;
+    }
+
+    /**
+     * 返回可识别的sql
+     * @return array
+     * @author Blues
+     *
+     */
+    public function getDataBaseLog()
+    {
+        $sqls = [];
+        foreach ($this->dataBaseLog as $query) {
+            $sql = str_replace('?', '%s', $query['query']);
+            array_walk($query['bindings'], function (&$param) {
+                if (!is_numeric($param)) {
+                    //字符串的  增加引号
+                    $param = "\"$param\"";
+                }
+            });
+            $sql = sprintf($sql, ...$query['bindings']);
+            $sql .= ";\t   -- time:{$query['time']}s";
+            $sqls[] = $sql;
+        }
+        return $sqls;
     }
 }

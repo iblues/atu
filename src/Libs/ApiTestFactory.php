@@ -82,6 +82,7 @@ class ApiTestFactory
             if ($annotation->debug || $this->debug)
                 $this->debugInfo($annotation, $request, $startTime, $loginUser, 0);
 
+
         } catch (\Exception $e) {
 
             //处理Authorization
@@ -105,6 +106,7 @@ class ApiTestFactory
 
     protected function debugInfo($annotation, $request, $startTime = 0, $loginUser = null, $error = true)
     {
+
         $debugInfo = [];
         /**
          * @var $annotation Api
@@ -126,6 +128,13 @@ class ApiTestFactory
         $this->dump('CURL', $this->toCurlCommand($request, $loginUser));
         if ($startTime)
             $this->dump('Time', (($this->msectime() - $startTime) / 1000) . 's');
+
+
+        $sql = $annotation->getDataBaseLog();
+        $sql = 'file://' . File::saveFile('SQL', implode("\r\n", $sql), false, '.sql');
+        $this->dump('SQL', $sql);
+
+
         foreach ($debugInfo as $key => $info) {
 
             if ($error && in_array($key, ['ErrorMsg', 'Response'])) {
