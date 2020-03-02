@@ -14,7 +14,7 @@
         }
     },
     "require": {
-        "php": ">=7.0",
+        "php": ">7.0",
         "doctrine/annotations": "^1.8"
     },
     "extra": {
@@ -25,6 +25,6 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": ">7.0"
+        "phpunit/phpunit": ">=7.0,<9.0"
     }
 }

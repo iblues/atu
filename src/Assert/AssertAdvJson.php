@@ -25,6 +25,8 @@ class AssertAdvJson extends Constraint
      */
     private $strict;
 
+    protected $exporter;
+
     /**
      * assertAdvJson
      * @param $subset
@@ -49,8 +51,6 @@ class AssertAdvJson extends Constraint
 
     public function __construct(iterable $subset, bool $strict = false)
     {
-        parent::__construct();
-
         $this->strict = $strict;
         $this->subset = $subset;
     }
