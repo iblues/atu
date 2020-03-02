@@ -34,6 +34,10 @@ trait ApiTest
             $number += $ATU->getNumber();
         }
         Console::info('Total ATU: ' . $number);
+        if ($number == 0) {
+            //避免没有任何断言的报错
+            $this->assertTrue(true);
+        }
         ob_flush();
     }
 
@@ -213,11 +217,6 @@ trait ApiTest
         }
         $model = new $model();
         $model->where($where)->delete();
-    }
-
-    public function assertAdvJson(array $data, $strict = false)
-    {
-        return AssertAdvJson::assert($data, $this->decodeResponseJson(), $strict, $this->assertJsonMessage($data));
     }
 
 

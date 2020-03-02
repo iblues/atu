@@ -57,6 +57,14 @@ class Routes
         }
     }
 
+    /**
+     * 检查注解有没有对应路由
+     * @param $classNameSpace
+     * @param $routes
+     * @throws \ReflectionException
+     * @author Blues
+     *
+     */
     static function checkClassHasRoute($classNameSpace, $routes)
     {
         $class = new \ReflectionClass($classNameSpace);
@@ -69,11 +77,11 @@ class Routes
                 $fullPath = $classNameSpace . '@' . $methodName;
                 $filePath = $class->getFileName();
                 if (stripos($doc, '@ATU\Ignore') !== false) {
-                    echo '@ATU\Ignore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . ' ) ';
+                    echo '@ATU\Ignore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . " ) \r\n";
                     continue;
                 }
                 if (stripos($doc, '@ATU\RouteIgnore') !== false) {
-                    echo '@ATU\RouteIgnore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . ' ) ';
+//                    echo '@ATU\RouteIgnore in ' . $fullPath . ' ( ' . $filePath . ':' . $method->getStartLine() . " ) \r\n";
                     continue;
                 }
                 if (!in_array($fullPath, $routes)) {

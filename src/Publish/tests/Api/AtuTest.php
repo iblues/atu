@@ -63,26 +63,11 @@ class AtuTest extends TestCase
 
 
     /**
-     * setUp会执行多次, 如果只想执行一次,请用AtuSetUp代替
-     * @author Blues
-     */
-    public function AtuSetUp()
-    {
-        //仅执行一次
-        static $done = false;
-        if ($done) {
-            return '';
-        }
-        $done = true;
-    }
-
-    /**
      * 测试带有@ATU\Api()注解的
      * @author Blues
      */
     public function testAll()
     {
-        $this->AtuSetUp();
         $this->doAll();
 //        $this->doAll(['tag'=>'tag1']);  Look for @ATU\Tag("product"), @ATU\Tag(["product","order"]);
     }
@@ -94,7 +79,6 @@ class AtuTest extends TestCase
      */
     public function testNow()
     {
-        $this->AtuSetUp();
         $this->doNow();
 //        $this->doNow(['tag'=>'tag1']);  Look for @ATU\Tag("product");
     }
