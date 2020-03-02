@@ -47,10 +47,6 @@ class ApiTestFactory
 
         }
         try {
-            //@ATU\now
-            if (@$filter['now'] && !$annotation->isNow()) {
-                return;
-            }
 
             //@ATU\ignore
             if ($annotation->isIgnore()) {
@@ -60,6 +56,11 @@ class ApiTestFactory
 
             //如果不满足tag,就跳过.
             if (!$annotation->inTag(@$filter['tag'])) {
+                return;
+            }
+
+            //@ATU\now
+            if (@$filter['now'] && !$annotation->isNow()) {
                 return;
             }
 

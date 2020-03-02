@@ -226,9 +226,15 @@ class Api
         $matchTag = $this->tag;
         //有设置tag
         if ($matchTag) {
-            $matchTag = $this->tag[0];
-            $return = array_intersect($target, $matchTag->getTag());
-            return count($return) > 0 ? true : false;
+            $flag = false;
+            foreach ($this->tag as $tag) {
+                $return = array_intersect($target, $tag->getTag());
+                if (count($return) > 0) {
+                    $flag = true;
+                }
+            }
+            return $flag;
+
         } else {
             return false;
         }
