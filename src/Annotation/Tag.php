@@ -9,7 +9,6 @@ namespace Iblues\AnnotationTestUnit\Annotation;
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
  * Class Tag
- * @Target({"ANNOTATION"})
  * @package Iblues\AnnotationTestUnit
  */
 class Tag
