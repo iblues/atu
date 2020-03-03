@@ -315,11 +315,11 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [x] Api
 - [x] Now
 - [x] Request
+- [x] Response,正则支持
 - [x] getRequest
 - [ ] Request 文件上传,随机种子
 - [x] Response
 - [x] getResponse
-- [x] Response,正则支持
 - [x] Before
 - [x] Degbug
 - [x] Assert
@@ -342,8 +342,11 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [ ] artisan的测试
 
   v1.2
-- [ ] Telescope完美集成
 - [ ] Template 测试模板的定义和调用
+
+  v1.3
+- [ ] event断言
+- [ ] Telescope完美集成
 
 ## Contributing
 
