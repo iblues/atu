@@ -6,9 +6,6 @@ namespace Iblues\AnnotationTestUnit\Libs;
 
 use Iblues\AnnotationTestUnit\Annotation\Api;
 use Iblues\AnnotationTestUnit\Annotation\TestApi;
-use Iblues\AnnotationTestUnit\Libs\Php2Curl;
-use Illuminate\Foundation\Testing\TestResponse;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class ApiTestFactory
 {
@@ -139,8 +136,15 @@ class ApiTestFactory
 
 
         $sql = $annotation->getDataBaseLog();
+        $telescope = $this->telescope($sql);
+
         $sql = 'file://' . File::saveFile('SQL', implode("\r\n", $sql), false, '.sql');
         $this->dump('SQL', $sql);
+
+
+        //如果启动了telescope
+        if ($telescope)
+            $this->dump('Telescope', $telescope);
 
 
         foreach ($debugInfo as $key => $info) {
@@ -234,5 +238,33 @@ class ApiTestFactory
     public function getNumber()
     {
         return $this->number;
+    }
+
+    /**
+     * 由于正常启用了事务回滚的.所以把相关部分重新插入
+     * @author Blues
+     *
+     */
+    protected function telescope($sqls)
+    {
+        //临时先关闭事务. 让其写入数据库
+        \DB::rollBack();
+        foreach ($sqls as $sql) {
+            $logSql = [];
+            //就认为是telescope启用了
+            if (substr($sql, 0, '31') == 'insert into `telescope_entries`'
+                || substr($sql, 0, '36') == 'insert into `telescope_entries_tags`'
+            ) {
+                $match = [];
+                preg_match('/\"(.*?)\"/i', $sql, $match);
+                \DB::insert($sql);
+            }
+        }
+        \DB::beginTransaction();
+        $id = $match['1'] ?? null;
+        if ($id) {
+            return $url = config('app.url') . '/telescope/requests/' . $id;
+        }
+
     }
 }

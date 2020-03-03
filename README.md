@@ -306,6 +306,9 @@ A: 注解错误,  经常是少了逗号.
 
 Q: 报错  got ''' 
 A: 注解中请用双引号. 单引号不行. 如@ATU\Before("login");
+
+Q: 报错 Illuminate\Contracts\Container\BindingResolutionException : Target class [env] does not exist.
+A: telescope冲突 需要在phpunit.xml中加上 
 ## TodoList
 @ATU\
 - [x] Api

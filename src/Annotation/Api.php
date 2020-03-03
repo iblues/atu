@@ -270,6 +270,7 @@ class Api
             array_walk($query['bindings'], function (&$param) {
                 if (!is_numeric($param)) {
                     //字符串的  增加引号
+                    $param = addslashes($param);
                     $param = "\"$param\"";
                 }
             });

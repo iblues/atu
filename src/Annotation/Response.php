@@ -117,6 +117,9 @@ class Response
             $this->debugInfo['Response File'] = 'file://' . $file;
 
             $vl = json_encode($array, JSON_UNESCAPED_UNICODE);
+            if (strlen($vl) > 60) {
+                $vl = substr($vl, 0, 150) . '...';
+            }
             $this->debugInfo['Response'] = $vl;
             ksort($this->debugInfo);
 
