@@ -311,6 +311,7 @@ Q: 报错 Illuminate\Contracts\Container\BindingResolutionException : Target cla
 A: telescope冲突 解决办法件 TELESCOPE.md
 ## TodoList
 @ATU\
+  v1.0版本
 - [x] Api
 - [x] Now
 - [x] Request
@@ -335,6 +336,14 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [x] 全局debug (在测试文件中启动)
 - [x] Telescope初步集成
 - [ ] 增加关于日志的断言
+
+  v1.1
+- [ ] before 高级: 在before中调用其他tag.进行关联性测试
+- [ ] artisan的测试
+
+  v1.2
+- [ ] Telescope完美集成
+- [ ] Template 测试模板的定义和调用
 
 ## Contributing
 
