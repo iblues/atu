@@ -61,7 +61,7 @@ class Response
      */
     public function getJsonRespone()
     {
-        $data = $this->response->getData();
+        $data = $this->response->decodeResponseJson();
         $data = json_decode(json_encode($data, JSON_UNESCAPED_UNICODE), 1);
         return $data;
     }
@@ -84,7 +84,7 @@ class Response
      */
     public function dumpResponse($responseObj)
     {
-        $response = $responseObj->getData();
+        $response = $responseObj->decodeResponseJson();
 
 
         //转成array
@@ -109,7 +109,7 @@ class Response
         }
 
         //如果层级太多了.大于16个. 就记录到日志中去
-        if (count($array, 1) > 2) {
+        if (is_array($array) && count($array, 1) > 2) {
             //创建日志
 
             File::clearFile(1);
@@ -132,7 +132,7 @@ class Response
     public function assert($annotation, $request)
     {
         try {
-            $responseJson = $this->response->getData();
+            $responseJson = $this->response->decodeResponseJson();
 
             //将response信息写回debugInfo
             $this->dumpResponse($this->response);
