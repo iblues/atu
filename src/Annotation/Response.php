@@ -92,9 +92,9 @@ class Response
 
         //如果是500报错
         try {
-            if ($responseObj['code'] == 500) {
+            if ($responseObj->getStatusCode() == 500) {
                 if (isset($response['message'])) {
-                    $this->debugInfo['ErrorMsg'] = $response->message;
+                    $this->debugInfo['ErrorMsg'] = $response['message'];
                 }
                 if (isset($response['data']) && isset($response['data']['message'])) {
                     $this->debugInfo['ErrorMsg'] = $response['data']['message'];
@@ -102,9 +102,12 @@ class Response
                 if (isset($response['data'])) {
                     $this->debugInfo['trace'] = $array['data'];
                 }
+                if (isset($response['trace'])) {
+                    $this->debugInfo['trace'] = ['trace' => $array['trace']];
+                }
             }
         } catch (\Exception $e) {
-
+            throw $e;
         }
 
         //如果层级太多了.大于16个. 就记录到日志中去

@@ -153,7 +153,9 @@ class ApiTestFactory
                 $this->dump($key, $info, 1);
             } else if ($key == 'trace') {
                 Console::error(' ----------------------------------------- Error Trace -------------------------------------------');
-                Console::error("file://{$info['file']}:{$info['line']}");
+                if (isset($info['file'])) {
+                    Console::error("file://{$info['file']}:{$info['line']}");
+                }
                 if (isset($info['trace'])) {
                     foreach ($info['trace'] as $trace) {
                         $class = '';
