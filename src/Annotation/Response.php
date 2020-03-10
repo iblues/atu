@@ -92,17 +92,16 @@ class Response
 
         //如果是500报错
         try {
-            if ($responseObj->getStatusCode() == 500) {
-                if (property_exists($response, 'message')) {
+            if ($responseObj['code'] == 500) {
+                if (isset($response['message'])) {
                     $this->debugInfo['ErrorMsg'] = $response->message;
                 }
-                if (property_exists($response, 'data') && property_exists($response->data, 'message')) {
-                    $this->debugInfo['ErrorMsg'] = $response->data->message;
+                if (isset($response['data']) && isset($response['data']['message'])) {
+                    $this->debugInfo['ErrorMsg'] = $response['data']['message'];
                 }
-                if (property_exists($response, 'data')) {
+                if (isset($response['data'])) {
                     $this->debugInfo['trace'] = $array['data'];
                 }
-
             }
         } catch (\Exception $e) {
 

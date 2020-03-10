@@ -148,6 +148,9 @@ class AssertAdvJson extends Constraint
      */
     public function toString(): string
     {
+        if (!$this->exporter) {
+            return false;
+        }
         return 'has the subset ' . $this->exporter->export($this->subset);
     }
 
