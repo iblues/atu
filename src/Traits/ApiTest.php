@@ -2,6 +2,7 @@
 
 namespace Iblues\AnnotationTestUnit\Traits;
 
+use EasyWeChat\Kernel\Support\Arr;
 use Iblues\AnnotationTestUnit\Libs\Annotation;
 use Iblues\AnnotationTestUnit\Libs\Console;
 use Iblues\AnnotationTestUnit\Libs\Param;
@@ -18,19 +19,25 @@ trait ApiTest
      */
     public $param = [];
     public $loginUser = null;
+    protected $todoList = [];
 
     /**
      * 测试带有@ATU\Api和@ATU\Now注解的
+     * @param array $filter
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \ReflectionException
      * @author Blues
-     *
      */
-    protected function doNow($tag = null)
+    protected function doNow($filter = [])
     {
         $cache = $this->cache ?? true;
-        $todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
+        //避免二次读取
+        if (!$this->todoList)
+            $this->todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         $number = 0;
-        foreach ($todoList as $todo) {
-            $ATU = new ApiTestFactory($this, $todo, ['tag' => $tag, 'now' => 1, 'debug' => $this->debug ?? false]);
+        foreach ($this->todoList as $todo) {
+            $ATU = new ApiTestFactory($this, $todo, ['tag' => $filter['tag'] ?? null, 'now' => 1, 'debug' => $this->debug ?? false]);
             $number += $ATU->getNumber();
         }
         Console::info('Total ATU: ' . $number);
@@ -43,19 +50,41 @@ trait ApiTest
 
     /**
      * 测试带有@ATU\Api()注解的
+     * @param array $filter
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
+     * @throws \ReflectionException
      * @author Blues
      */
-    protected function doAll($tag = null)
+    protected function doAll($filter = [])
     {
+
         $cache = $this->cache ?? true;
-        $todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
+        $call = Arr::get($filter, 'call', false);
+        if (!$this->todoList)
+            $this->todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         $number = 0;
-        foreach ($todoList as $todo) {
-            $ATU = new ApiTestFactory($this, $todo, ['tag' => $tag, 'debug' => $this->debug ?? false]);
+
+        foreach ($this->todoList as $todo) {
+            $ATU = new ApiTestFactory($this, $todo, ['tag' => $filter['tag'] ?? null, 'debug' => $this->debug ?? false, 'call' => $call]);
             $number += $ATU->getNumber();
         }
-        Console::info('Total ATU: ' . $number);
+
+        //call的不输出这个了
+        if (!$call) {
+            Console::info('Total ATU: ' . $number);
+        }
         ob_flush();
+    }
+
+    /**
+     * @param $name
+     * @author Blues
+     *
+     */
+    public function callAtu($name)
+    {
+        $this->doAll(['tag' => $name, 'call' => true]);
     }
 
 

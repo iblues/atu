@@ -114,13 +114,6 @@ class Annotation
 //                        }
 
 
-                        //有Test\Now的才执行
-                        if ($now && !stripos($doc, '@ATU\Now')) {
-                            //这个就不能缓存了.
-                            continue;
-                        }
-
-
                         $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
 
                         $route['httpMethod'] = $route['method'];

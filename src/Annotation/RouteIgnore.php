@@ -9,7 +9,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @author Blues
  * @link https://github.com/iblues/annotation-test-unit
  * @Annotation
- * Class IgnoreRouterCheck
+ * Class IgnoreRouter
  * @package Iblues\AnnotationTestUnit
  */
 class RouteIgnore

@@ -6,6 +6,7 @@ namespace Iblues\AnnotationTestUnit\Libs;
 
 use Iblues\AnnotationTestUnit\Annotation\Api;
 use Iblues\AnnotationTestUnit\Annotation\TestApi;
+use Illuminate\Support\Arr;
 
 class ApiTestFactory
 {
@@ -28,7 +29,6 @@ class ApiTestFactory
         $this->fileLine = $methodLine = 'file://' . $param['classPath'] . ':' . $param['methodStartLine'];
         $this->debug = $filter['debug'] ?? false;
         $this->methodPath = $param['path'];
-
         foreach ($param['annotation'] as $annotation) {
             $this->walkAnnotation($annotation, $filter);
         }
@@ -37,11 +37,12 @@ class ApiTestFactory
     public function walkAnnotation(Api $annotation, $filter = [])
     {
         $testClass = $this->testClass;
+        //代表是其他函数call的
+        $call = Arr::get($filter, 'call', false);
 
-        if ($annotation->now) {
+        if ($annotation->now && !$call) {
             //如果是开启了当前测试. 提醒下哪些开了的 方便随时关闭
             dump('@ATU\Now enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
-
         }
         try {
 
