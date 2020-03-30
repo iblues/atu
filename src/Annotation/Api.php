@@ -301,7 +301,7 @@ class Api
                 }
             });
             $sql = sprintf($sql, ...$query['bindings']);
-            $sql .= ";\t   -- time:{$query['time']}s";
+            $sql = "\r\n-- time:{$query['time']}s \r\n" . $sql;
             $sqls[] = $sql;
         }
         return $sqls;
