@@ -124,7 +124,9 @@ php artisan vendor:publish --tag ATU
 
 @ATUBefore({test/test::class,"call"},{"param1"}); //调对应类的方法
 @ATUBefore("call",{"param1"}); //调test类本身的方法. 可以在方法中调用setParam存储. 再@GetPrarm()调用
-@ATU\Before("doSomeThing");
+@ATU\Before(@ATU\Tag("user.admin")); //调用其他的tag进行关联性测试
+
+@ATU\After("setParam",{"userAdmin",@ATU\GetResponse()}), //配合before+tag使用
 
 
 $Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
@@ -340,7 +342,7 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [ ] 增加关于日志的断言
 
   v1.1
-- [ ] before 高级: 在before中调用其他tag.进行关联性测试
+- [x] before 高级: 在before中调用其他tag.进行关联性测试
 - [ ] artisan的测试
 
   v1.2
