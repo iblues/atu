@@ -22,7 +22,10 @@ class Before
     function __construct($data)
     {
         $value = $this->parseConstructValue($data);
-        if (class_exists($value[0])) {
+
+        if ($value[0] instanceof Tag) {
+            $this->funcName = $value[0];
+        } else if (class_exists($value[0])) {
             $this->class = $value[0];
             $this->funcName = $value[1];
             $this->param = $value[2] ?? [];
@@ -37,12 +40,16 @@ class Before
     function handle($testClass)
     {
         $class = $this->class ?? $testClass;
-        if (method_exists($class, 'callProtectedFunction')) {
+        if ($this->funcName instanceof Tag) {
+            $this->funcName = $this->funcName->getTag()[0];
+            $testClass->callATU($this->funcName);
+        } else if (method_exists($class, 'callProtectedFunction')) {
             $param = ['func' => $this->funcName, 'param' => $this->param];
             return call_user_func_array([$class, 'callProtectedFunction'], $param);
         } else {
             return call_user_func_array([$class, $this->funcName], $this->param);
         }
     }
+
 
 }

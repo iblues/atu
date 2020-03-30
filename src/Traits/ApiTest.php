@@ -82,9 +82,12 @@ trait ApiTest
      * @author Blues
      *
      */
-    public function callAtu($name)
+    public function callATU($name)
     {
+        $iso = $this->isolateApp;
+        $this->isolateApp = false;
         $this->doAll(['tag' => $name, 'call' => true]);
+        $this->isolateApp = $iso;
     }
 
 

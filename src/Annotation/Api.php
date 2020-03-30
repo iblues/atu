@@ -222,6 +222,9 @@ class Api
         if (is_null($target)) {
             return true;
         }
+        if (is_string($target)) {
+            $target = [$target];
+        }
 
         $matchTag = $this->tag;
         //有设置tag
