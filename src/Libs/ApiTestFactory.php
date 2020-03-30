@@ -252,22 +252,17 @@ class ApiTestFactory
      */
     protected function telescope($sqls)
     {
-        //这里启用事务的话. 会把上下文的引起问题. 先暂停
-        return false;
-        //临时先关闭事务. 让其写入数据库
-        \DB::rollBack();
         foreach ($sqls as $sql) {
             $logSql = [];
             //就认为是telescope启用了
-            if (substr($sql, 0, '31') == 'insert into `telescope_entries`'
-                || substr($sql, 0, '36') == 'insert into `telescope_entries_tags`'
+            if (stripos($sql, 'insert into `telescope_entries`') !== false
+                || stripos($sql, 'insert into `telescope_entries_tags`') !== false
             ) {
                 $match = [];
                 preg_match('/\"(.*?)\"/i', $sql, $match);
-                \DB::insert($sql);
+                $this->testClass->setInsertSql($sql);
             }
         }
-        \DB::beginTransaction();
         $id = $match['1'] ?? null;
         if ($id) {
             return $url = config('app.url') . '/telescope/requests/' . $id;

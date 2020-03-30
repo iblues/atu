@@ -20,6 +20,7 @@ trait ApiTest
     public $param = [];
     public $loginUser = null;
     protected $todoList = [];
+    protected $insertSql = [];
 
     /**
      * 测试带有@ATU\Api和@ATU\Now注解的
@@ -252,6 +253,27 @@ trait ApiTest
         }
         $model = new $model();
         $model->where($where)->delete();
+    }
+
+
+    /**
+     * 设置最后要写入数据库的sql.不受事务影响
+     * @author Blues
+     *
+     */
+    public function setInsertSql($sql)
+    {
+        $this->insertSql[] = $sql;
+    }
+
+    public function callBeforeApplicationDestroyedCallbacks()
+    {
+        parent::callBeforeApplicationDestroyedCallbacks();
+        //事务在这里已经解除了
+        foreach ($this->insertSql as $sql) {
+            \DB::insert($sql);
+        }
+//
     }
 
 
