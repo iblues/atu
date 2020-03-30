@@ -79,8 +79,9 @@ trait ApiTest
 
     /**
      * @param $name
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     * @throws \ReflectionException
      * @author Blues
-     *
      */
     public function callATU($name)
     {
@@ -140,6 +141,7 @@ trait ApiTest
      * @param $key
      * @param $data
      * @return boolean|array
+     * @throws \Exception
      * @author Blues
      *
      */
@@ -152,6 +154,7 @@ trait ApiTest
      * 设置变量 通过setParam()设置
      * @param $key
      * @return boolean|array
+     * @throws \Exception
      * @author Blues
      *
      */

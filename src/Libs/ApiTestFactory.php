@@ -64,7 +64,11 @@ class ApiTestFactory
 
             $this->number++;
 
-            $testClass->refresh();
+            //上下文调用的不刷新, 否则会事务回滚
+            if ($call) {
+//                dump(COmmon)
+//                $testClass->refresh();
+            }
 
             //执行$before相关函数
             $annotation->handleBofore($testClass);
@@ -77,6 +81,7 @@ class ApiTestFactory
 //dump($response);
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);
+            $annotation->handleAfter($testClass, $annotation, $request, $response);
 
             //登录验证参数,给curl用
             $loginUser = $testClass->loginUser;

@@ -39,6 +39,7 @@ class Api
     protected $before = [];
     protected $fullRequest = [];
     protected $dataBaseLog = [];
+    protected $after = [];
     /**
      * @var Login
      */
@@ -75,6 +76,8 @@ class Api
                 $this->login = $param;
             } elseif ($param instanceof Assert) {
                 $this->assert[] = $param;
+            } elseif ($param instanceof After) {
+                $this->after[] = $param;
             } elseif ($param instanceof Before) {
                 $this->before[] = $param;
             } elseif ($param instanceof Tag) {
@@ -115,11 +118,30 @@ class Api
             try {
                 $before->handle($testClass);
             } catch (\Exception $e) {
-                dump('回调错误' . $e->getMessage() . ' ' . $e->getFile() . ':' . $e->getLine());
+                dump('Before回调错误' . $e->getMessage() . ' ' . $e->getFile() . ':' . $e->getLine());
                 throw $e;
             }
         }
 
+    }
+
+    /**
+     * 完成后的回调
+     * @param $testClass
+     * @param $annotation
+     * @param $request
+     * @param $response
+     * @author Blues
+     *
+     */
+    public function handleAfter($testClass, $annotation, $request, $response)
+    {
+        foreach ($this->after as $after) {
+            /**
+             * @var $after After
+             */
+            $after->handle($testClass, $request, $response);
+        }
     }
 
     protected function handelUrl($urlPath, $originUrl)
@@ -194,6 +216,7 @@ class Api
         $this->response->assert($annotation, $request);
         return $this->response;
     }
+
 
     public function getResponeDebugInfo()
     {
