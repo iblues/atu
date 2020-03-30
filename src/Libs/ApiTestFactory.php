@@ -64,11 +64,8 @@ class ApiTestFactory
 
             $this->number++;
 
-            //上下文调用的不刷新, 否则会事务回滚
-            if ($call) {
-//                dump(COmmon)
-//                $testClass->refresh();
-            }
+            //刷新事务
+            $testClass->refresh();
 
             //执行$before相关函数
             $annotation->handleBofore($testClass);
@@ -255,6 +252,8 @@ class ApiTestFactory
      */
     protected function telescope($sqls)
     {
+        //这里启用事务的话. 会把上下文的引起问题. 先暂停
+        return false;
         //临时先关闭事务. 让其写入数据库
         \DB::rollBack();
         foreach ($sqls as $sql) {
