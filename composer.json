@@ -1,6 +1,6 @@
 {
     "name": "iblues/annotation-test-unit",
-    "description": " Base on annotation's and laravel phpunit.\n一个基于注解和laravel单元测试的 自动化测试包",
+    "description": "Laravel ATU Base on annotation's and laravel phpunit.\n一个基于注解和laravel单元测试的 自动化测试包",
     "authors": [
         {
             "name": "Blues",
