@@ -1,6 +1,6 @@
 <h1 align="center"> Annotation-test-unit (ATU) </h1>
 
-<p align="center">A phpunit Tool Base on annotation and laravel.一个基于注解和laravel的单元测试包. 
+<p align="center">Laravel ATU : A phpunit Tool Base on annotation and laravel. 一个基于注解和laravel的单元测试包. 
 
 </p>
 
