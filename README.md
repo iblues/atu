@@ -338,19 +338,17 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [x] title
 - [x] 全局debug (在测试文件中启动)
 - [x] Telescope初步集成
-
-  v1.1
 - [x] before 高级: 在before中调用其他tag.进行关联性测试
 - [x] 增加关于日志的断言
 
-  v1.2
+  v1.1
 - [ ] artisan的测试
 - [ ] Request 文件上传,随机种子
 
-  v1.3
+  v1.2
 - [ ] Template 测试模板的定义和调用
 
-  v1.4
+  v1.3
 - [ ] event断言
 - [ ] Telescope完美集成
 
