@@ -321,7 +321,6 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [x] Request
 - [x] Response,正则支持
 - [x] getRequest
-- [ ] Request 文件上传,随机种子
 - [x] Response
 - [x] getResponse
 - [x] Before
@@ -339,16 +338,19 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 - [x] title
 - [x] 全局debug (在测试文件中启动)
 - [x] Telescope初步集成
-- [ ] 增加关于日志的断言
 
   v1.1
 - [x] before 高级: 在before中调用其他tag.进行关联性测试
-- [ ] artisan的测试
+- [x] 增加关于日志的断言
 
   v1.2
-- [ ] Template 测试模板的定义和调用
+- [ ] artisan的测试
+- [ ] Request 文件上传,随机种子
 
   v1.3
+- [ ] Template 测试模板的定义和调用
+
+  v1.4
 - [ ] event断言
 - [ ] Telescope完美集成
 

@@ -5,12 +5,12 @@ namespace Iblues\AnnotationTestUnit\Traits;
 use EasyWeChat\Kernel\Support\Arr;
 use Iblues\AnnotationTestUnit\Libs\Annotation;
 use Iblues\AnnotationTestUnit\Libs\Console;
+use Iblues\AnnotationTestUnit\Libs\LogAssert;
 use Iblues\AnnotationTestUnit\Libs\Param;
 use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
 use Iblues\AnnotationTestUnit\Libs\Routes;
 use Tests\Feature\AnnotationTest;
 use Iblues\AnnotationTestUnit\Assert\AssertAdvJson;
-
 trait ApiTest
 {
     /**
@@ -266,6 +266,12 @@ trait ApiTest
         $this->insertSql[] = $sql;
     }
 
+
+    /**
+     * 事务接受后需要往数据库写入的sql
+     * @author Blues
+     *
+     */
     public function callBeforeApplicationDestroyedCallbacks()
     {
         parent::callBeforeApplicationDestroyedCallbacks();
@@ -274,6 +280,15 @@ trait ApiTest
             \DB::insert($sql);
         }
 //
+    }
+
+    function assertLog($content, $level = null)
+    {
+        if (app(LogAssert::class)->search($content, $level)) {
+            $this->assertTrue(true);
+        } else {
+            throw new \Exception(" AssertLog Error: " . $content . ' not match');
+        }
     }
 
 
