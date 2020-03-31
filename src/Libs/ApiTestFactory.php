@@ -83,6 +83,16 @@ class ApiTestFactory
             //登录验证参数,给curl用
             $loginUser = $testClass->loginUser;
 
+
+            //有before调用的时候, 存入到param方便后续调用.
+            if ($call) {
+                $param = [
+                    'request' => $request['request'],
+                    'response' => $response->getRespone()->decodeResponseJson(),
+                ];
+                Param::param($call, $param);
+            }
+
             //处理Authorization
             $request = $this->handelHeaderAuthorization($testClass, $request);
 

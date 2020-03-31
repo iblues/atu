@@ -88,7 +88,7 @@ trait ApiTest
     {
         $iso = $this->isolateApp;
         $this->isolateApp = false;
-        $this->doAll(['tag' => $name, 'call' => true]);
+        $this->doAll(['tag' => $name, 'call' => $name]);
         $this->isolateApp = $iso;
     }
 

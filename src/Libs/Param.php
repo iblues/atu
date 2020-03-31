@@ -19,7 +19,9 @@ class Param
      */
     static public function param($key = '', $data = null)
     {
+
         static $cache = [];
+
         if ($data) {
             $data = json_decode(json_encode($data), 1);
             $cache[$key] = $data;
