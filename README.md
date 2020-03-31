@@ -295,7 +295,9 @@ assertSoftDeleted($table, array $data);    断言给定记录已被软删除。
 //然后定义? 
 ```
 
+6.DEMO文件
 
+https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php
 
 ## 其他  函数的常规测试 未完成的 未完成
 ```
