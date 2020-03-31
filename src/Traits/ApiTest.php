@@ -205,6 +205,7 @@ trait ApiTest
         if ($isolateApp) {
             $this->tearDown();
             $this->setUp();
+            app(LogAssert::class)->clear();
         }
     }
 
