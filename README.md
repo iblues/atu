@@ -129,7 +129,7 @@ php artisan vendor:publish --tag ATU
 @ATU\After("setParam",{"userAdmin",@ATU\GetResponse()}), //配合before+tag使用
 
 
-$Test\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
+@ATU\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
 
 @ATU\Response( 413 )  //默认就是200
 @ATU\Response( {"id":1} ) 
