@@ -11,6 +11,7 @@ use Iblues\AnnotationTestUnit\Libs\ApiTestFactory;
 use Iblues\AnnotationTestUnit\Libs\Routes;
 use Tests\Feature\AnnotationTest;
 use Iblues\AnnotationTestUnit\Assert\AssertAdvJson;
+
 trait ApiTest
 {
     /**
@@ -22,6 +23,18 @@ trait ApiTest
     protected $todoList = [];
     protected $insertSql = [];
 
+
+    protected function getToDoList()
+    {
+        $cache = $this->cache ?? true;
+        //避免二次读取
+        if (!$this->todoList)
+            $this->todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
+
+        //等于是深度clone. 如果不clone 在before互相调用的时候. 引用会出问题.
+        return unserialize(serialize($this->todoList));
+    }
+
     /**
      * 测试带有@ATU\Api和@ATU\Now注解的
      * @param array $filter
@@ -32,12 +45,10 @@ trait ApiTest
      */
     protected function doNow($filter = [])
     {
-        $cache = $this->cache ?? true;
-        //避免二次读取
-        if (!$this->todoList)
-            $this->todoList = Annotation::getApiTest(['now' => 1, 'whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
         $number = 0;
-        foreach ($this->todoList as $todo) {
+        $todoList = $this->getToDoList();
+
+        foreach ($todoList as $todo) {
             $ATU = new ApiTestFactory($this, $todo, ['tag' => $filter['tag'] ?? null, 'now' => 1, 'debug' => $this->debug ?? false]);
             $number += $ATU->getNumber();
         }
@@ -59,14 +70,12 @@ trait ApiTest
      */
     protected function doAll($filter = [])
     {
-
-        $cache = $this->cache ?? true;
         $call = Arr::get($filter, 'call', false);
-        if (!$this->todoList)
-            $this->todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
-        $number = 0;
 
-        foreach ($this->todoList as $todo) {
+        $number = 0;
+        $todoList = $this->getToDoList();
+
+        foreach ($todoList as $todo) {
             $ATU = new ApiTestFactory($this, $todo, ['tag' => $filter['tag'] ?? null, 'debug' => $this->debug ?? false, 'call' => $call]);
             $number += $ATU->getNumber();
         }
@@ -82,6 +91,7 @@ trait ApiTest
      * @param $name
      * @throws \Doctrine\Common\Annotations\AnnotationException
      * @throws \ReflectionException
+     * @throws \Psr\SimpleCache\InvalidArgumentException
      * @author Blues
      */
     public function callATU($name)

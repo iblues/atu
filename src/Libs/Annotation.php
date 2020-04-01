@@ -113,7 +113,6 @@ class Annotation
 //                            continue;
 //                        }
 
-
                         $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
 
                         $route['httpMethod'] = $route['method'];

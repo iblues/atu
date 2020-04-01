@@ -75,7 +75,6 @@ class ApiTestFactory
             $request = $annotation->handleRequest($testClass, $this->method, $this->url);
             $response = $annotation->handleResponse($testClass, $annotation, $request);
 
-//dump($response);
             //处理跟返回参数无关的assert.比如数据库
             $annotation->handleAssert($testClass, $annotation, $request, $response);
             $annotation->handleAfter($testClass, $annotation, $request, $response);
@@ -88,7 +87,7 @@ class ApiTestFactory
             if ($call) {
                 $param = [
                     'request' => $request['request'],
-                    'response' => $response->getRespone()->decodeResponseJson(),
+                    'response' => $response->getJsonRespone()
                 ];
                 Param::param($call, $param);
             }
