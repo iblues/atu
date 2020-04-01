@@ -21,7 +21,7 @@ qq交流群:814333044
 
 1.composer 安装
 ```shell
-$ composer require iblues/annotation-test-unit -vvv
+$ composer require iblues/atu --dev
 ```
 2.配置好单元测试,教程:
 <https://www.w3cschool.cn/intellij_idea_doc/using_phpunit_framework.html>
