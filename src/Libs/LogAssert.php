@@ -23,7 +23,7 @@ class LogAssert
 
         $level = $data->level;
         $message = $data->message;
-        echo $content = json_encode($data->context, JSON_UNESCAPED_UNICODE);
+        $content = json_encode($data->context, JSON_UNESCAPED_UNICODE);
 
         $this->data[] = ['level' => $level, 'message' => $message, 'content' => $content];
     }

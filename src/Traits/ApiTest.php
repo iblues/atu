@@ -277,8 +277,12 @@ trait ApiTest
     {
         parent::callBeforeApplicationDestroyedCallbacks();
         //事务在这里已经解除了
-        foreach ($this->insertSql as $sql) {
-            \DB::insert($sql);
+        try {
+            foreach ($this->insertSql as $sql) {
+                \DB::insert($sql);
+            }
+        } catch (\Exception $e) {
+
         }
 //
     }
