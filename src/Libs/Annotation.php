@@ -32,15 +32,15 @@ class Annotation
         $while = Arr::get($filter, 'whiteList', []);
         $black = Arr::get($filter, 'blackList', []);
 
-        $Cache = Cache::store('file');
+        $Caches = Cache::store('file');
 
         //缓存系统;
-        $routes = $Cache->get('router');
+        $routes = $Caches->get('router');
         if (!$routes) {
             $routes = Routes::getRoutes();
             //路由缓存60秒
             //先不缓存. 后面做下处理. 检测路由对应文件的mtime改了才清理缓存.
-//            $Cache->set('router', $routes,60);
+//            $Caches->set('router', $routes,60);
         }
 
         $return = [];
@@ -57,6 +57,7 @@ class Annotation
         }
         AnnotationRegistry::registerLoader('class_exists');
 
+        $cacheRoutes = $Caches->get('TodoFileList', []);
 
         foreach ($routes as $key => $route) {
 
@@ -88,8 +89,7 @@ class Annotation
                 $cacheName = md5(json_encode($route)) . $mtime;
 
                 //如果修改时间没有变化,就读取缓存的.加快读取速度
-                if ($cache && $tmp = $Cache->get($cacheName)) {
-//                    $Cache->set($cacheName,null);
+                if ($cache && $tmp = Arr::get($cacheRoutes, $cacheName, null)) {
                     if ($tmp != 'noAtu') {
                         $return[] = $tmp;
                     }
@@ -103,15 +103,10 @@ class Annotation
                         //存在注释@ATU\Api 才解析
                         if (!stripos($doc, '@ATU\Api') !== false) {
                             //缓存24小时
-                            $Cache->set($cacheName, 'noAtu', now()->addMinutes(60 * 24));
+                            if ($cache)
+                                $cacheRoutes[$cacheName] = 'noAtu';
                             continue;
                         }
-
-//                        //忽略的
-//                        if (stripos($doc, '@ATU\ignore') !== false) {
-//                            //忽略的就不执行了
-//                            continue;
-//                        }
 
                         $methodAnnotations = $annotationReader->getMethodAnnotations($reflectionMethod);
 
@@ -121,7 +116,8 @@ class Annotation
                         $route['method'] = $method;
                         $route['methodStartLine'] = $reflectionMethod->getStartLine();//函数开始的行数
                         $route['annotation'] = $methodAnnotations;
-                        $Cache->set($cacheName, $route, 3600);
+                        if ($cache)
+                            $cacheRoutes[$cacheName] = $route;
                         $return[] = $route;
 
 
@@ -131,6 +127,9 @@ class Annotation
                 }
             }
         }
+
+        $Caches->set('TodoFileList', $cacheRoutes, now()->addMinutes(60));
+
         return $return;
     }
 
