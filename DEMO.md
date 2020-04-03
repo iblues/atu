@@ -1,5 +1,8 @@
 
 ### DEMO
+实际使用的较为复杂的
+[DEMO示例](https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php)
+
 
 1.简易版 请求看是不是返回200
 ```
@@ -130,6 +133,3 @@
 //然后定义? 
 ```
 
-6.DEMO文件
-
-[DEMO示例](https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php)
