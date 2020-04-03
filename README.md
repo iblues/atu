@@ -49,7 +49,7 @@ PS:有效的设置测试环境 phpunit.xml 其中:
     /**
      * 请确保 xx/xx/1有数据
      * @ATU\Api(
-     *     "path":1   
+     *     "path":1,
      *      @ATU\Now(),
      * )
      */
@@ -92,7 +92,7 @@ php artisan vendor:publish --tag ATU
  
 ## Usage
 
-[详细DEMO](https://github.com/iblues/atu/DEMO.md)
+[详细DEMO](https://github.com/iblues/atu/blob/master/DEMO.md)
 
 ### 文档说明
 ```
