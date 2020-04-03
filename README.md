@@ -92,6 +92,8 @@ php artisan vendor:publish --tag ATU
  
 ## Usage
 
+[详细DEMO](https://github.com/iblues/atu/DEMO.md)
+
 ### 文档说明
 ```
 注意事项:
@@ -102,9 +104,6 @@ php artisan vendor:publish --tag ATU
 2.类似以下数组[1,2,3]需要改写为{1,2,3}
 
 3.字符串必须适应双引号. 如{"title":1} , 否则报错 got ''' 
-
-
-
 
 @ATU\Api (代表是api的测试)
 @ATU\Api( path = http://baidu.com , method=GET , title="测试" , author="xx")
@@ -122,12 +121,11 @@ php artisan vendor:publish --tag ATU
 @ATU\Request({1:21})   //json参数
 //@ATU\Request({file:@storage(12.txt)} ) //代表文件路径的 未完成
 
-@ATUBefore({test/test::class,"call"},{"param1"}); //调对应类的方法
-@ATUBefore("call",{"param1"}); //调test类本身的方法. 可以在方法中调用setParam存储. 再@GetPrarm()调用
+@ATU\Before({test/test::class,"call"},{"param1"}); //调对应类的方法
+@ATU\Before("call",{"param1"}); //调test类本身的方法. 可以在方法中调用setParam存储. 再@GetPrarm()调用
 @ATU\Before(@ATU\Tag("user.admin")); //调用其他的tag进行关联性测试
 
 @ATU\After("setParam",{"userAdmin",@ATU\GetResponse()}), //配合before+tag使用
-
 
 @ATU\Login(false|100|0) // false的时候不登录,  100指定用户id为100的  0随意获取一个用户 
 
@@ -141,7 +139,6 @@ php artisan vendor:publish --tag ATU
    },
    @ATU\Assert("assertJsonMissingExact",{"tt":1}), //等于response进行断言. 参考 https://learnku.com/docs/laravel/6.x/http-tests/5183#available-assertions
 }),
-
 
 //可以传入@Response和@request 会处理成对应值返回.
 @ATU\Assert("assertDatabaseHas",{"user",
@@ -161,149 +158,9 @@ assertDatabaseMissing($table, array $data);    断言数据库中的表不包含
 assertSoftDeleted($table, array $data);    断言给定记录已被软删除。
 
 也可以在类中自行增加自定义函数.
-
-
-```
-### DEMO
-
-1.简易版 请求看是不是返回200
-```
-@ATU\Api(
-   @ATU\Now(),
-   @ATU\Request(),
-   @ATU\Response({
-      "data":true
-   }),
-)
-```
-2.验证返回结果版本 , 并输出debug
-```
-@ATU\Api(
-   @ATU\Now(),
-   @ATU\Debug(),
-   @ATU\Request(),
-   @ATU\Response({
-      "data":true,
-      "data":{
-        {"id":true}
-       }
-   }),
-)
-```
-3.复杂版本.同一个控制器 多种请求.多个返回结果;assert调用其他断言(可以调用自定义函数)
 ```
 
-@ATU\Api(
-  title="something",
-  @ATU\Now(),
-  @ATU\Before("createUser"),
-  @ATU\Request(),
-  @ATU\Response(200,{
-   "code":true,
-   "data":{{"id":true,"user":true}},
-  }),
-  @ATU\Debug()
-)
-
-@ATU\Api(
-  @ATU\Now(),
-  @ATU\Request({"title":122}),
-  @ATU\Response({
-   "data":{"title":122}
-  }),
-  @ATU\Debug()
-),
-
-
-@ATU\Api(
-  @ATU\Now(),
-  @ATU\Request({"title":1}),
-  @ATU\Response(422,{
-   "data":{"title":true}
-  }),
-  @ATU\Debug()
-)
-
-复杂版本. 囊括了大部分用法
-
-@ATU\Api(
-  path = 1,
-  method = "PUT",
-  @ATU\Now(),
-  @ATU\Request({"title":"测试","content":123}),
-  @ATU\Response({
-     "data":{"id":true,"title":"测试"}
-    },
-    @ATU\Assert("assertSee",{"测试"}),
-    @ATU\Assert("assertSee",{@ATU\GetRequest("title")}),
-    @ATU\Assert("assertJson", {{"data":@ATU\GetRequest}} ),
-    @ATU\Assert("assertOk"),
-  ),
-  @ATU\Assert("assertDatabaseHas",{"test_test",{"id":1}} ),
-  @ATU\Assert("assertDatabaseHas",{"test_test",@ATU\GetRequest()}),
-  @ATU\Assert("assertDatabaseHas",{"test_test",
-   { "title" : @ATU\GetResponse("data.title") }
-  }),
-),
-
-
-@ATU\Api(
-  @ATU\Before("create",{TestTest::class,{"title":"测试22"} }),
-  @ATU\Request({"title":@ATU\GetParam("TestTest.title"),"content":@ATU\GetParam("TestTest.title"),"user_id":"123"}),
-  @ATU\Response({
-     "data":{"id":true,"title":@ATU\GetRequest("title")}
-    },
-    @ATU\Assert("assertSee",{@ATU\GetParam("TestTest.title")}),
-    @ATU\Assert("assertSee",{@ATU\GetRequest("title")}),
-    @ATU\Assert("assertJson", {{"data":@ATU\GetRequest}} ),
-    @ATU\Assert("assertOk"),
-  ),
-  @ATU\Assert("assertDatabaseHas",{"test_test",{"id":1}} ),
-  @ATU\Assert("assertDatabaseHas",{"test_test",@ATU\GetRequest()} ),
-  @ATU\Assert("assertDatabaseHas",{"test_test",
-   { "title" : @ATU\GetResponse("data.title") }
-  }),
-),
-
-
-@ATU\Api(
-  @ATU\Now(),
-  path={"http://baidu.com/",@ATU\GetParam("test.id"),"/otherUrl"},
-  method="GET",
-  @ATU\Before("createTest"),
-  @ATU\Response({
-   "status":1,
-   "data":{"title":@ATU\GetParam("test.title")},
-  }),
-  @ATU\Assert("assertDatabaseHas",{"test_test",{"title":@ATU\GetParam("test.title")} }),
-)
-```
-
-4.暂时忽略
-```
-@ATU\Api(
-  @ATU\Ignore
-)
-```
-
-5.调用模板 未完成
-```
-@ATU\Api(
-    @ATU\Larfree('tes.test')
-)
-
-//然后定义? 
-```
-
-6.DEMO文件
-
-https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php
-
-## 其他  函数的常规测试 未完成的 未完成
-```
-@ATUNow
-@assert(1,2) == 3
-```
+[详细DEMO](https://github.com/iblues/atu/DEMO.md)
 
 ## FAQ
 Q: 报错 got '@' at position
@@ -358,8 +215,8 @@ A: telescope冲突 解决办法件 TELESCOPE.md
 
 You can contribute in one of three ways:
 
-1. File bug reports using the [issue tracker](https://github.com/iblues/annotation-test-unit/issues).
-2. Answer questions or fix bugs on the [issue tracker](https://github.com/iblues/annotation-test-unit/issues).
+1. File bug reports using the [issue tracker](https://github.com/iblues/atu/issues).
+2. Answer questions or fix bugs on the [issue tracker](https://github.com/iblues/atu/issues).
 3. Contribute new features or update the wiki.
 
 _The code contribution process is not very formal. You just need to make sure that you follow the PSR-0, PSR-1, and PSR-2 coding guidelines. Any new code contributions must be accompanied by unit tests where applicable._

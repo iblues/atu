@@ -47,7 +47,7 @@ class ApiTestFactory
         try {
 
             //@ATU\ignore
-            if ($annotation->isIgnore()) {
+            if (!$call && $annotation->isIgnore()) {
                 dump('@ATU\Ignore enable in ' . $this->methodPath . '(' . $this->fileLine . ")");
                 return;
             }

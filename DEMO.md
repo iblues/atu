@@ -1,5 +1,5 @@
-#DEMO示例
 
+### DEMO
 
 1.简易版 请求看是不是返回200
 ```
@@ -114,14 +114,14 @@
 )
 ```
 
-4.忽略该测试
+4.暂时忽略
 ```
 @ATU\Api(
   @ATU\Ignore
 )
 ```
 
-5.调用模板 未完成功能
+5.调用模板 未完成
 ```
 @ATU\Api(
     @ATU\Larfree('tes.test')
@@ -129,3 +129,7 @@
 
 //然后定义? 
 ```
+
+6.DEMO文件
+
+[DEMO示例](https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php)

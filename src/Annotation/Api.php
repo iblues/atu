@@ -9,7 +9,7 @@ use Iblues\AnnotationTestUnit\Traits\ParseValue;
 
 /**
  * 标记这是一个Api测试,一个控制器可以有多个
- * @link https://github.com/iblues/annotation-test-unit
+ * @link https://github.com/iblues/atu
  * @Annotation
  * @author Blues
  * Class Api

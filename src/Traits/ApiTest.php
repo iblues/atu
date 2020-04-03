@@ -26,7 +26,7 @@ trait ApiTest
 
     protected function getToDoList()
     {
-        $cache = $this->cache ?? true;
+        $cache = $this->cache ?? false;
         //避免二次读取
         if (!$this->todoList)
             $this->todoList = Annotation::getApiTest(['whiteList' => $this->whiteList ?? [], 'blackList' => $this->blackList ?? []], $cache);
@@ -70,6 +70,7 @@ trait ApiTest
      */
     protected function doAll($filter = [])
     {
+
         $call = Arr::get($filter, 'call', false);
 
         $number = 0;
