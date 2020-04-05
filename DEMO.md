@@ -1,25 +1,19 @@
 
 ### DEMO
-实际使用的较为复杂的
-[DEMO示例](https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php)
 
+#### 投入使用的的较为复杂的[DEMO示例](https://github.com/iblues/larfree-permission/blob/master/src/Controllers/User/AdminController.php)
+
+#### 其他简单演示:
 
 1.简易版 请求看是不是返回200
 ```
 @ATU\Api(
-   @ATU\Now(),
-   @ATU\Request(),
-   @ATU\Response({
-      "data":true
-   }),
 )
 ```
-2.验证返回结果版本 , 并输出debug
+2.验证返回结果版本 , 并输出debug , 并检查返回结果
 ```
 @ATU\Api(
-   @ATU\Now(),
    @ATU\Debug(),
-   @ATU\Request(),
    @ATU\Response({
       "data":true,
       "data":{
@@ -33,36 +27,31 @@
 
 @ATU\Api(
   title="something",
-  @ATU\Now(),
   @ATU\Before("createUser"),
-  @ATU\Request(),
   @ATU\Response(200,{
    "code":true,
    "data":{{"id":true,"user":true}},
   }),
-  @ATU\Debug()
 )
 
 @ATU\Api(
-  @ATU\Now(),
   @ATU\Request({"title":122}),
   @ATU\Response({
    "data":{"title":122}
   }),
-  @ATU\Debug()
 ),
 
 
 @ATU\Api(
-  @ATU\Now(),
   @ATU\Request({"title":1}),
   @ATU\Response(422,{
    "data":{"title":true}
   }),
-  @ATU\Debug()
 )
 
 复杂版本. 囊括了大部分用法
+PS:assertDatabaseHas检查数据库有没有该记录
+
 
 @ATU\Api(
   path = 1,
