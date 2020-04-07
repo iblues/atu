@@ -66,6 +66,7 @@ class Api
 
             if ($param instanceof Now) {
                 $this->now = 1;
+                $this->debug = new Debug();
             } elseif ($param instanceof Request) {
                 $this->request = $param;
             } elseif ($param instanceof Response) {
